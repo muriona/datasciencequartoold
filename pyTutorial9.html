@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tutorial 9 - Métodos Avançados de Regressão – EPS-UFSC</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">EPS-UFSC</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-python" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais Python</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-python">    
+        <li>
+    <a class="dropdown-item" href="./pyTutorialPython.html">
+ <span class="dropdown-text">Tutorial de Instalação do Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial3.html">
+ <span class="dropdown-text">Tutorial 3 - Matplotlib</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Seaborn e GeoPandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5.html">
+ <span class="dropdown-text">Tutorial 5 - Quarto Dashboards em Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5b.html">
+ <span class="dropdown-text">Tutorial 5b - Mapas Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5c.html">
+ <span class="dropdown-text">Tutorial 5c - Dashboards Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial6.html">
+ <span class="dropdown-text">Tutorial 6 - Métodos não supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial7.html">
+ <span class="dropdown-text">Tutorial 7 - Métodos de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial8.html">
+ <span class="dropdown-text">Tutorial 8 - Métodos de Classificação</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial9.html">
+ <span class="dropdown-text">Tutorial 9 - Métodos Avançados de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial10.html">
+ <span class="dropdown-text">Tutorial 10 - Métodos Avançados em Classificação</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-r" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais R</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-r">    
+        <li>
+    <a class="dropdown-item" href="./Tutorial0.html">
+ <span class="dropdown-text">Tutorial 0 - Conhecendo o R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Ggplot2 e Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial_av_ggplot.html">
+ <span class="dropdown-text">Tutorial 3a - Ggplot Avançado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial3b.html">
+ <span class="dropdown-text">Tutorial 3b - Quarto Dashboards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Métodos Não Supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial5regtidymodels.html">
+ <span class="dropdown-text">Tutorial 5 - Métodos de Regressão e Classificação em R</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução">Introdução</a></li>
+  <li><a href="#carregando-os-pacotes" id="toc-carregando-os-pacotes" class="nav-link" data-scroll-target="#carregando-os-pacotes">Carregando os pacotes</a></li>
+  <li><a href="#lendo-e-preparando-os-dados" id="toc-lendo-e-preparando-os-dados" class="nav-link" data-scroll-target="#lendo-e-preparando-os-dados">Lendo e preparando os dados</a></li>
+  <li><a href="#parte-1---validação-cruzada-k-fold" id="toc-parte-1---validação-cruzada-k-fold" class="nav-link" data-scroll-target="#parte-1---validação-cruzada-k-fold">Parte 1 - Validação Cruzada k-fold</a>
+  <ul class="collapse">
+  <li><a href="#o-problema-de-uma-única-divisão-treinoteste" id="toc-o-problema-de-uma-única-divisão-treinoteste" class="nav-link" data-scroll-target="#o-problema-de-uma-única-divisão-treinoteste">O problema de uma única divisão treino/teste</a></li>
+  <li><a href="#como-funciona-o-k-fold" id="toc-como-funciona-o-k-fold" class="nav-link" data-scroll-target="#como-funciona-o-k-fold">Como funciona o k-fold</a></li>
+  <li><a href="#implementando-o-k-fold-na-mão" id="toc-implementando-o-k-fold-na-mão" class="nav-link" data-scroll-target="#implementando-o-k-fold-na-mão">Implementando o k-fold “na mão”</a></li>
+  <li><a href="#usando-cross_val_score" id="toc-usando-cross_val_score" class="nav-link" data-scroll-target="#usando-cross_val_score">Usando <code>cross_val_score</code></a></li>
+  <li><a href="#várias-métricas-com-cross_validate" id="toc-várias-métricas-com-cross_validate" class="nav-link" data-scroll-target="#várias-métricas-com-cross_validate">Várias métricas com <code>cross_validate</code></a></li>
+  <li><a href="#comparando-os-modelos-do-tutorial-7-com-validação-cruzada" id="toc-comparando-os-modelos-do-tutorial-7-com-validação-cruzada" class="nav-link" data-scroll-target="#comparando-os-modelos-do-tutorial-7-com-validação-cruzada">Comparando os modelos do Tutorial 7 com validação cruzada</a></li>
+  <li><a href="#qual-valor-de-k-usar" id="toc-qual-valor-de-k-usar" class="nav-link" data-scroll-target="#qual-valor-de-k-usar">Qual valor de k usar?</a></li>
+  </ul></li>
+  <li><a href="#parte-2---otimização-de-hiperparâmetros" id="toc-parte-2---otimização-de-hiperparâmetros" class="nav-link" data-scroll-target="#parte-2---otimização-de-hiperparâmetros">Parte 2 - Otimização de Hiperparâmetros</a>
+  <ul class="collapse">
+  <li><a href="#parâmetros-vs.-hiperparâmetros" id="toc-parâmetros-vs.-hiperparâmetros" class="nav-link" data-scroll-target="#parâmetros-vs.-hiperparâmetros">Parâmetros vs.&nbsp;hiperparâmetros</a></li>
+  <li><a href="#curva-de-validação-um-hiperparâmetro-de-cada-vez" id="toc-curva-de-validação-um-hiperparâmetro-de-cada-vez" class="nav-link" data-scroll-target="#curva-de-validação-um-hiperparâmetro-de-cada-vez">Curva de validação: um hiperparâmetro de cada vez</a></li>
+  <li><a href="#grid-search-busca-exaustiva" id="toc-grid-search-busca-exaustiva" class="nav-link" data-scroll-target="#grid-search-busca-exaustiva">Grid Search: busca exaustiva</a></li>
+  <li><a href="#randomized-search-busca-aleatória" id="toc-randomized-search-busca-aleatória" class="nav-link" data-scroll-target="#randomized-search-busca-aleatória">Randomized Search: busca aleatória</a></li>
+  <li><a href="#grid-search-com-pipeline-otimizando-o-svr" id="toc-grid-search-com-pipeline-otimizando-o-svr" class="nav-link" data-scroll-target="#grid-search-com-pipeline-otimizando-o-svr">Grid Search com Pipeline: otimizando o SVR</a></li>
+  <li><a href="#validação-cruzada-aninhada-nested-cross-validation" id="toc-validação-cruzada-aninhada-nested-cross-validation" class="nav-link" data-scroll-target="#validação-cruzada-aninhada-nested-cross-validation">Validação cruzada aninhada (nested cross validation)</a></li>
+  </ul></li>
+  <li><a href="#parte-3---avaliação-final-no-conjunto-de-teste" id="toc-parte-3---avaliação-final-no-conjunto-de-teste" class="nav-link" data-scroll-target="#parte-3---avaliação-final-no-conjunto-de-teste">Parte 3 - Avaliação final no conjunto de teste</a></li>
+  <li><a href="#resumo" id="toc-resumo" class="nav-link" data-scroll-target="#resumo">Resumo</a></li>
+  <li><a href="#exercícios" id="toc-exercícios" class="nav-link" data-scroll-target="#exercícios">Exercícios</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tutorial 9 - Métodos Avançados de Regressão</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introdução" class="level2">
+<h2 class="anchored" data-anchor-id="introdução">Introdução</h2>
+<p>No <a href="https://muriona.github.io/datasciencequarto/pyTutorial7.html"><code>Tutorial 7</code></a> treinamos três modelos de regressão (Árvore de Decisão, Random Forest e SVR) para prever o preço dos móveis da IKEA. Para avaliá-los, usamos <strong>uma única divisão</strong> entre treino e teste e deixamos todos os modelos com seus <strong>parâmetros padrão</strong>.</p>
+<p>Neste tutorial vamos dar dois passos adiante:</p>
+<ol type="1">
+<li><strong>Validação cruzada k-fold (k-fold cross validation):</strong> uma forma mais robusta de estimar o desempenho de um modelo, que não depende da “sorte” de uma única divisão treino/teste.</li>
+<li><strong>Otimização de hiperparâmetros (hyperparameter optimization):</strong> procurar, de forma sistemática, a configuração de cada modelo que produz o melhor desempenho, usando a validação cruzada como juiz.</li>
+</ol>
+</section>
+<section id="carregando-os-pacotes" class="level2">
+<h2 class="anchored" data-anchor-id="carregando-os-pacotes">Carregando os pacotes</h2>
+<div id="1e9631ca" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.colors <span class="im">as</span> mcolors</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> (train_test_split, KFold, cross_val_score,cross_validate, validation_curve,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>GridSearchCV, RandomizedSearchCV)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, r2_score</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder, StandardScaler</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVR</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> randint</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="3edd8f68" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>minha_palette <span class="op">=</span> [<span class="st">"#ffbe0b"</span>, <span class="st">"#3a86ff"</span>,<span class="st">"#fb5607"</span>,<span class="st">"#8338ec"</span>, <span class="st">"#ff006e"</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuração estética padrão</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"dark"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>sns.set_palette(minha_palette)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mapa de cores contínuo com duas cores da paleta (usado nos heatmaps)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>meu_cmap <span class="op">=</span> mcolors.LinearSegmentedColormap.from_list(<span class="st">"dois_tons"</span>, minha_palette[:<span class="dv">2</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lendo-e-preparando-os-dados" class="level2">
+<h2 class="anchored" data-anchor-id="lendo-e-preparando-os-dados">Lendo e preparando os dados</h2>
+<p>Usaremos o mesmo dataset da IKEA do Tutorial 7. Como a limpeza e a exploração dos dados já foram feitas lá, vamos apenas repetir os passos de preparação de forma resumida:</p>
+<ul>
+<li>selecionar as colunas de interesse e remover os valores <code>NULL</code>;</li>
+<li>eliminar a coluna <code>sellable_online</code> (quase todos os produtos são vendidos online);</li>
+<li>transformar o preço com <code>log10</code>;</li>
+<li>codificar a coluna categórica <code>category</code>.</li>
+</ul>
+<div id="79f4f46c" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-11-03/ikea.csv'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ikea <span class="op">=</span> df[[<span class="st">'price'</span>,<span class="st">'category'</span>,<span class="st">'depth'</span>,<span class="st">'height'</span>,<span class="st">'width'</span>]].dropna()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ikea[<span class="st">'log_price'</span>] <span class="op">=</span> np.log10(ikea[<span class="st">'price'</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ikea <span class="op">=</span> ikea.drop([<span class="st">'price'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>label_encoder <span class="op">=</span> LabelEncoder()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>ikea[<span class="st">'category_encoded'</span>] <span class="op">=</span> label_encoder.fit_transform(ikea[<span class="st">'category'</span>])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>ikea <span class="op">=</span> ikea.drop(<span class="st">'category'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>ikea.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.DataFrame'&gt;
+Index: 1899 entries, 3 to 3688
+Data columns (total 5 columns):
+ #   Column            Non-Null Count  Dtype  
+---  ------            --------------  -----  
+ 0   depth             1899 non-null   float64
+ 1   height            1899 non-null   float64
+ 2   width             1899 non-null   float64
+ 3   log_price         1899 non-null   float64
+ 4   category_encoded  1899 non-null   int64  
+dtypes: float64(4), int64(1)
+memory usage: 89.0 KB</code></pre>
+</div>
+</div>
+<div id="6d03b630" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ikea.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">depth</th>
+<th data-quarto-table-cell-role="th">height</th>
+<th data-quarto-table-cell-role="th">width</th>
+<th data-quarto-table-cell-role="th">log_price</th>
+<th data-quarto-table-cell-role="th">category_encoded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>50.0</td>
+<td>100.0</td>
+<td>60.0</td>
+<td>1.838849</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4</th>
+<td>60.0</td>
+<td>43.0</td>
+<td>74.0</td>
+<td>2.352183</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">5</th>
+<td>45.0</td>
+<td>91.0</td>
+<td>40.0</td>
+<td>2.537819</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">6</th>
+<td>44.0</td>
+<td>95.0</td>
+<td>50.0</td>
+<td>2.110590</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>44.0</td>
+<td>95.0</td>
+<td>50.0</td>
+<td>2.110590</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Agora vamos separar as features (<code>X</code>) e a variável alvo (<code>y</code>) e, assim como no Tutorial 7, reservar 20% dos dados como <strong>conjunto de teste</strong>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>O conjunto de teste será guardado “no cofre” e <strong>só será usado no final</strong> do tutorial, para avaliar os modelos já otimizados. Toda a validação cruzada e a busca de hiperparâmetros será feita <strong>apenas com os dados de treino</strong>. Se usarmos o teste para escolher hiperparâmetros, a avaliação final ficará otimista demais (vazamento de informação).</p>
+</div>
+</div>
+<div id="73b7491b" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> ikea.drop(<span class="st">'log_price'</span>, axis<span class="op">=</span><span class="dv">1</span>)  <span class="co"># Features</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> ikea[<span class="st">'log_price'</span>]               <span class="co"># Variável alvo</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Treino: </span><span class="sc">{</span>X_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> linhas | Teste: </span><span class="sc">{</span>X_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> linhas'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Treino: 1519 linhas | Teste: 380 linhas</code></pre>
+</div>
+</div>
+</section>
+<section id="parte-1---validação-cruzada-k-fold" class="level2">
+<h2 class="anchored" data-anchor-id="parte-1---validação-cruzada-k-fold">Parte 1 - Validação Cruzada k-fold</h2>
+<section id="o-problema-de-uma-única-divisão-treinoteste" class="level3">
+<h3 class="anchored" data-anchor-id="o-problema-de-uma-única-divisão-treinoteste">O problema de uma única divisão treino/teste</h3>
+<p>No Tutorial 7 usamos <code>random_state=42</code> para dividir os dados. Mas o que acontece se mudarmos esse número? Vamos treinar a mesma árvore de decisão com 20 divisões aleatórias diferentes e observar o R² obtido em cada uma.</p>
+<div id="53e904b4" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>r2_divisoes <span class="op">=</span> []</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> seed <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    X_tr, X_te, y_tr, y_te <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span>seed)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    modelo <span class="op">=</span> DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>).fit(X_tr, y_tr)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    r2_divisoes.append(r2_score(y_te, modelo.predict(X_te)))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'R² mínimo: </span><span class="sc">{</span><span class="bu">min</span>(r2_divisoes)<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'R² máximo: </span><span class="sc">{</span><span class="bu">max</span>(r2_divisoes)<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'R² médio : </span><span class="sc">{</span>np<span class="sc">.</span>mean(r2_divisoes)<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>np<span class="sc">.</span>std(r2_divisoes)<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R² mínimo: 0.701
+R² máximo: 0.829
+R² médio : 0.776 ± 0.034</code></pre>
+</div>
+</div>
+<div id="181c1a3b" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#para interpolar duas cores do minha_palette para produzir 20 cores para o plt.bar</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cores_barras <span class="op">=</span> [meu_cmap(i <span class="op">/</span> <span class="dv">19</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="1dc067c6" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="dv">20</span>), r2_divisoes, color<span class="op">=</span>cores_barras)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.axhline(np.mean(r2_divisoes), color<span class="op">=</span>minha_palette[<span class="dv">4</span>], linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Média'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'random_state da divisão'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'R² no teste'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'O mesmo modelo, 20 divisões diferentes'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-9-output-1.png" width="589" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>O <strong>mesmo modelo</strong> apresenta desempenhos diferentes dependendo de quais linhas caíram no teste. Uma única divisão nos dá uma estimativa “ruidosa”: podemos ter tido sorte (ou azar). A validação cruzada resolve isso de forma sistemática.</p>
+</section>
+<section id="como-funciona-o-k-fold" class="level3">
+<h3 class="anchored" data-anchor-id="como-funciona-o-k-fold">Como funciona o k-fold</h3>
+<p>Na validação cruzada k-fold, os dados de treino são divididos em <strong>k partes (folds)</strong> de tamanho aproximadamente igual. Em seguida:</p>
+<ol type="1">
+<li>treinamos o modelo com k-1 folds;</li>
+<li>avaliamos no fold que ficou de fora (fold de validação);</li>
+<li>repetimos o processo k vezes, de modo que <strong>cada fold seja usado exatamente uma vez como validação</strong>;</li>
+<li>o desempenho final é a <strong>média</strong> (e o desvio padrão) das k avaliações.</li>
+</ol>
+<p>Assim, todas as observações são usadas tanto para treinar quanto para validar, e obtemos também uma medida da variabilidade do desempenho. Valores comuns são k = 5 ou k = 10.</p>
+<p>Vamos criar o objeto <code>KFold</code> com k = 5. O argumento <code>shuffle=True</code> embaralha as linhas antes de dividir, o que é importante caso os dados estejam ordenados de alguma forma (por exemplo, por categoria).</p>
+<div id="89adb938" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Vamos visualizar como as linhas do conjunto de treino são distribuídas entre os folds. Cada linha do gráfico é uma iteração; em amarelo as observações usadas para treino e em azul as usadas para validação.</p>
+<div id="58d209c4" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(X_train)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>matriz_folds <span class="op">=</span> np.zeros((<span class="dv">5</span>, n))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx_treino, idx_valid) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    matriz_folds[i, idx_valid] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.imshow(matriz_folds, aspect<span class="op">=</span><span class="st">'auto'</span>, cmap<span class="op">=</span>meu_cmap, interpolation<span class="op">=</span><span class="st">'nearest'</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.yticks(<span class="bu">range</span>(<span class="dv">5</span>), [<span class="ss">f'Iteração </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Índice da observação no conjunto de treino'</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Divisão em 5 folds (amarelo = treino, azul = validação)'</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-11-output-1.png" width="832" height="302" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Como o gráfico ficou muito difícil de apreciar, vamos pegar apenas uma porção dos dados de treino e refazer a mesma figura.</p>
+<div id="1f1a70e1" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Define os 10% do tamanho dos dados de treino</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(X_train) <span class="op">*</span> <span class="fl">0.02</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Cria a matriz com o tamanho reduzido (5x20) para 5 iterações e n colunas</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>matriz_folds <span class="op">=</span> np.zeros((<span class="dv">5</span>, n))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. FATIA o X_train para que o K-Fold use apenas esses 10%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>X_train_reduzido <span class="op">=</span> X_train[:n]</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Alimenta o split com os dados já reduzidos</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx_treino, idx_valid) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train_reduzido)):</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Agora idx_valid conterá apenas índices entre 0 e n-1, encaixando perfeitamente na matriz</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    matriz_folds[i, idx_valid] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Plota o gráfico idêntico ao original, mas agora em escala menor</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>plt.imshow(matriz_folds, aspect<span class="op">=</span><span class="st">'auto'</span>, cmap<span class="op">=</span>meu_cmap, interpolation<span class="op">=</span><span class="st">'nearest'</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>plt.yticks(<span class="bu">range</span>(<span class="dv">5</span>), [<span class="ss">f'Iteração </span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Índice da observação no conjunto de treino (2%)'</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Divisão em 5 folds (amarelo = treino, azul = validação)'</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-12-output-1.png" width="832" height="302" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="implementando-o-k-fold-na-mão" class="level3">
+<h3 class="anchored" data-anchor-id="implementando-o-k-fold-na-mão">Implementando o k-fold “na mão”</h3>
+<p>Para entender o que acontece por dentro, vamos primeiro fazer a validação cruzada com um laço <code>for</code>, treinando uma árvore de decisão em cada iteração.</p>
+<div id="0f183568" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>resultados_folds <span class="op">=</span> []</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx_treino, idx_valid) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    X_tr, X_val <span class="op">=</span> X_train.iloc[idx_treino], X_train.iloc[idx_valid]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    y_tr, y_val <span class="op">=</span> y_train.iloc[idx_treino], y_train.iloc[idx_valid]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    modelo <span class="op">=</span> DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    modelo.fit(X_tr, y_tr)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    y_pred_val <span class="op">=</span> modelo.predict(X_val)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    resultados_folds.append({</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Fold'</span>: i <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'R2'</span>: r2_score(y_val, y_pred_val),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'RMSE'</span>: np.sqrt(mean_squared_error(y_val, y_pred_val))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>resultados_folds <span class="op">=</span> pd.DataFrame(resultados_folds)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>resultados_folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Fold</th>
+<th data-quarto-table-cell-role="th">R2</th>
+<th data-quarto-table-cell-role="th">RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>0.701384</td>
+<td>0.278635</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
+<td>0.809354</td>
+<td>0.227763</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>0.782268</td>
+<td>0.249044</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>0.768930</td>
+<td>0.250347</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
+<td>0.727757</td>
+<td>0.278698</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="1d60255d" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² médio  : </span><span class="sc">{</span>resultados_folds[<span class="st">'R2'</span>]<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>resultados_folds[<span class="st">'R2'</span>]<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE médio: </span><span class="sc">{</span>resultados_folds[<span class="st">'RMSE'</span>]<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>resultados_folds[<span class="st">'RMSE'</span>]<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R² médio  : 0.758 ± 0.043
+RMSE médio: 0.257 ± 0.022</code></pre>
+</div>
+</div>
+</section>
+<section id="usando-cross_val_score" class="level3">
+<h3 class="anchored" data-anchor-id="usando-cross_val_score">Usando <code>cross_val_score</code></h3>
+<p>O scikit-learn faz todo esse laço em uma única linha com a função <code>cross_val_score</code>. Basta informar o modelo, os dados, a estratégia de divisão (<code>cv</code>) e a métrica (<code>scoring</code>).</p>
+<div id="7616e118" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>scores_tree <span class="op">=</span> cross_val_score(DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                              X_train, y_train, cv<span class="op">=</span>kf, scoring<span class="op">=</span><span class="st">'r2'</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'R² em cada fold:'</span>, np.<span class="bu">round</span>(scores_tree, <span class="dv">3</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'R² médio: </span><span class="sc">{</span>scores_tree<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>scores_tree<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R² em cada fold: [0.701 0.809 0.782 0.769 0.728]
+R² médio: 0.758 ± 0.039</code></pre>
+</div>
+</div>
+<p>Os valores são os mesmos obtidos no laço manual, pois usamos o mesmo objeto <code>kf</code>.</p>
+</section>
+<section id="várias-métricas-com-cross_validate" class="level3">
+<h3 class="anchored" data-anchor-id="várias-métricas-com-cross_validate">Várias métricas com <code>cross_validate</code></h3>
+<p>Se quisermos calcular mais de uma métrica ao mesmo tempo, usamos <code>cross_validate</code>. Um detalhe importante: o scikit-learn sempre <strong>maximiza</strong> os scores. Por isso, métricas de erro (onde menor é melhor) aparecem com o sinal negativo, por exemplo <code>neg_root_mean_squared_error</code>. Basta multiplicar por -1 para voltar ao valor usual.</p>
+<div id="47eb020d" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cv_tree <span class="op">=</span> cross_validate(DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>), X_train, y_train, cv<span class="op">=</span>kf,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                         scoring<span class="op">=</span>[<span class="st">'r2'</span>, <span class="st">'neg_root_mean_squared_error'</span>],</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                         return_train_score<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(cv_tree)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">score_time</th>
+<th data-quarto-table-cell-role="th">test_r2</th>
+<th data-quarto-table-cell-role="th">train_r2</th>
+<th data-quarto-table-cell-role="th">test_neg_root_mean_squared_error</th>
+<th data-quarto-table-cell-role="th">train_neg_root_mean_squared_error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0.002760</td>
+<td>0.000699</td>
+<td>0.701384</td>
+<td>0.991224</td>
+<td>-0.278635</td>
+<td>-0.049492</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>0.002478</td>
+<td>0.000753</td>
+<td>0.809354</td>
+<td>0.991877</td>
+<td>-0.227763</td>
+<td>-0.047352</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>0.002416</td>
+<td>0.000948</td>
+<td>0.782268</td>
+<td>0.991207</td>
+<td>-0.249044</td>
+<td>-0.049034</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.002548</td>
+<td>0.000682</td>
+<td>0.768930</td>
+<td>0.993231</td>
+<td>-0.250347</td>
+<td>-0.043272</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.002583</td>
+<td>0.000647</td>
+<td>0.727757</td>
+<td>0.992269</td>
+<td>-0.278698</td>
+<td>-0.045952</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Note que as colunas <code>train_r2</code> são praticamente iguais a 1: a árvore sem restrições <strong>decora</strong> os dados de treino, mas tem um desempenho bem pior nos folds de validação (<code>test_r2</code>). Esse é um sinal claro de <strong>overfitting</strong>, que vamos atacar com a otimização de hiperparâmetros.</p>
+</section>
+<section id="comparando-os-modelos-do-tutorial-7-com-validação-cruzada" class="level3">
+<h3 class="anchored" data-anchor-id="comparando-os-modelos-do-tutorial-7-com-validação-cruzada">Comparando os modelos do Tutorial 7 com validação cruzada</h3>
+<p>Agora vamos avaliar os três modelos do Tutorial 7 (com parâmetros padrão) usando 5-fold CV.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Atenção com o SVR:</strong> o SVR precisa que os dados estejam normalizados. Se normalizarmos todo o <code>X_train</code> antes da validação cruzada, o <code>StandardScaler</code> “enxerga” os dados dos folds de validação, o que é um vazamento de informação. A solução é usar um <code>Pipeline</code>: dessa forma o scaler é ajustado <strong>apenas com os folds de treino</strong> em cada iteração.</p>
+</div>
+</div>
+<div id="12300282" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>modelos <span class="op">=</span> {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Decision Tree'</span>: DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Random Forest'</span>: RandomForestRegressor(random_state<span class="op">=</span><span class="dv">42</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'SVR'</span>: Pipeline([(<span class="st">'scaler'</span>, StandardScaler()),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                     (<span class="st">'svr'</span>, SVR(kernel<span class="op">=</span><span class="st">'rbf'</span>))])</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>resultados_cv <span class="op">=</span> []</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome, modelo <span class="kw">in</span> modelos.items():</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cross_val_score(modelo, X_train, y_train, cv<span class="op">=</span>kf, scoring<span class="op">=</span><span class="st">'r2'</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> fold, s <span class="kw">in</span> <span class="bu">enumerate</span>(scores):</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        resultados_cv.append({<span class="st">'Modelo'</span>: nome, <span class="st">'Fold'</span>: fold <span class="op">+</span> <span class="dv">1</span>, <span class="st">'R2'</span>: s})</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>nome<span class="sc">:15s}</span><span class="ss"> R² = </span><span class="sc">{</span>scores<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>scores<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>resultados_cv <span class="op">=</span> pd.DataFrame(resultados_cv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Decision Tree   R² = 0.758 ± 0.039
+Random Forest   R² = 0.857 ± 0.022
+SVR             R² = 0.752 ± 0.025</code></pre>
+</div>
+</div>
+<p>Vamos visualizar a distribuição do R² nos 5 folds para cada modelo:</p>
+<div id="8e666e27" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>resultados_cv, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'R2'</span>, hue<span class="op">=</span><span class="st">'Modelo'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>sns.stripplot(data<span class="op">=</span>resultados_cv, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'R2'</span>, color<span class="op">=</span><span class="st">'black'</span>, size<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'R² na validação cruzada (5 folds) - parâmetros padrão'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-18-output-1.png" width="600" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>O boxplot mostra não só qual modelo é melhor em média, mas também o quão <strong>estável</strong> ele é entre os folds.</p>
+</section>
+<section id="qual-valor-de-k-usar" class="level3">
+<h3 class="anchored" data-anchor-id="qual-valor-de-k-usar">Qual valor de k usar?</h3>
+<p>A escolha de k é um equilíbrio: com k maior, cada modelo é treinado com mais dados (estimativa menos pessimista), mas o custo computacional aumenta porque treinamos k modelos. Vamos comparar k = 3, 5, 10 e 20 para a árvore de decisão.</p>
+<div id="4ce5d89f" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>resultados_k <span class="op">=</span> []</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>]:</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    cv_k <span class="op">=</span> KFold(n_splits<span class="op">=</span>k, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> cross_val_score(DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                             X_train, y_train, cv<span class="op">=</span>cv_k, scoring<span class="op">=</span><span class="st">'r2'</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    resultados_k.append({<span class="st">'k'</span>: k, <span class="st">'R2 médio'</span>: scores.mean(), <span class="st">'Desvio padrão'</span>: scores.std()})</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(resultados_k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">k</th>
+<th data-quarto-table-cell-role="th">R2 médio</th>
+<th data-quarto-table-cell-role="th">Desvio padrão</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>3</td>
+<td>0.717801</td>
+<td>0.018056</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>5</td>
+<td>0.757939</td>
+<td>0.038641</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>10</td>
+<td>0.738559</td>
+<td>0.057041</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>20</td>
+<td>0.771819</td>
+<td>0.068037</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Na prática, k = 5 ou k = 10 costumam oferecer um bom compromisso. Vamos seguir com k = 5.</p>
+</section>
+</section>
+<section id="parte-2---otimização-de-hiperparâmetros" class="level2">
+<h2 class="anchored" data-anchor-id="parte-2---otimização-de-hiperparâmetros">Parte 2 - Otimização de Hiperparâmetros</h2>
+<section id="parâmetros-vs.-hiperparâmetros" class="level3">
+<h3 class="anchored" data-anchor-id="parâmetros-vs.-hiperparâmetros">Parâmetros vs.&nbsp;hiperparâmetros</h3>
+<ul>
+<li><strong>Parâmetros</strong> são aprendidos pelo modelo durante o treino (por exemplo, os pontos de corte de cada nó de uma árvore, ou os coeficientes de uma regressão).</li>
+<li><strong>Hiperparâmetros</strong> são definidos <strong>antes</strong> do treino e controlam como o modelo aprende. Alguns exemplos:</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modelo</th>
+<th>Hiperparâmetro</th>
+<th>O que controla</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Decision Tree</td>
+<td><code>max_depth</code></td>
+<td>Profundidade máxima da árvore</td>
+</tr>
+<tr class="even">
+<td>Decision Tree</td>
+<td><code>min_samples_leaf</code></td>
+<td>Número mínimo de observações em cada folha</td>
+</tr>
+<tr class="odd">
+<td>Random Forest</td>
+<td><code>n_estimators</code></td>
+<td>Número de árvores da floresta</td>
+</tr>
+<tr class="even">
+<td>Random Forest</td>
+<td><code>max_features</code></td>
+<td>Número de features sorteadas em cada divisão</td>
+</tr>
+<tr class="odd">
+<td>SVR</td>
+<td><code>C</code></td>
+<td>Penalização dos erros (regularização)</td>
+</tr>
+<tr class="even">
+<td>SVR</td>
+<td><code>gamma</code></td>
+<td>Alcance da influência de cada ponto no kernel RBF</td>
+</tr>
+<tr class="odd">
+<td>SVR</td>
+<td><code>epsilon</code></td>
+<td>Largura da “margem” dentro da qual erros não são penalizados</td>
+</tr>
+</tbody>
+</table>
+<p>Otimizar hiperparâmetros significa testar várias combinações e escolher a que tem o <strong>melhor desempenho na validação cruzada</strong>.</p>
+</section>
+<section id="curva-de-validação-um-hiperparâmetro-de-cada-vez" class="level3">
+<h3 class="anchored" data-anchor-id="curva-de-validação-um-hiperparâmetro-de-cada-vez">Curva de validação: um hiperparâmetro de cada vez</h3>
+<p>Antes de fazer uma busca completa, é útil entender o efeito de um único hiperparâmetro. A função <code>validation_curve</code> calcula o score de treino e de validação (via CV) para vários valores de um hiperparâmetro. Vamos variar o <code>max_depth</code> da árvore de decisão.</p>
+<div id="865d93bb" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>profundidades <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">21</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>train_scores, valid_scores <span class="op">=</span> validation_curve(</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>), X_train, y_train,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    param_name<span class="op">=</span><span class="st">'max_depth'</span>, param_range<span class="op">=</span>profundidades,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>kf, scoring<span class="op">=</span><span class="st">'r2'</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>plt.plot(profundidades, train_scores.mean(axis<span class="op">=</span><span class="dv">1</span>), <span class="st">'o-'</span>, color<span class="op">=</span>minha_palette[<span class="dv">0</span>], label<span class="op">=</span><span class="st">'Treino'</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>plt.plot(profundidades, valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>), <span class="st">'o-'</span>, color<span class="op">=</span>minha_palette[<span class="dv">1</span>], label<span class="op">=</span><span class="st">'Validação (CV)'</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>plt.fill_between(profundidades,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>                 valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">-</span> valid_scores.std(axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>                 valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> valid_scores.std(axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span>minha_palette[<span class="dv">1</span>], alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'max_depth'</span>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'R²'</span>)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Curva de validação - Árvore de Decisão'</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-20-output-1.png" width="585" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="a04a5341" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>melhor_depth <span class="op">=</span> profundidades[valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>).argmax()]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor max_depth pela curva de validação: </span><span class="sc">{</span>melhor_depth<span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhor max_depth pela curva de validação: 20</code></pre>
+</div>
+</div>
+<p>Este gráfico ilustra o <strong>dilema viés-variância</strong>:</p>
+<ul>
+<li>com <code>max_depth</code> pequeno, o modelo é simples demais e erra tanto no treino quanto na validação (<strong>underfitting</strong>);</li>
+<li>com <code>max_depth</code> grande, o R² de treino se aproxima de 1, mas o de validação para de melhorar ou até piora (<strong>overfitting</strong>);</li>
+<li>o ponto ideal está onde a curva de validação atinge o máximo.</li>
+</ul>
+</section>
+<section id="grid-search-busca-exaustiva" class="level3">
+<h3 class="anchored" data-anchor-id="grid-search-busca-exaustiva">Grid Search: busca exaustiva</h3>
+<p>Na prática, os hiperparâmetros interagem entre si, então queremos testar <strong>combinações</strong>. O <code>GridSearchCV</code> testa <strong>todas</strong> as combinações de uma grade de valores e avalia cada uma com validação cruzada.</p>
+<p>Vamos otimizar dois hiperparâmetros da árvore de decisão: <code>max_depth</code> e <code>min_samples_leaf</code>.</p>
+<div id="c27186ad" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>param_grid_tree <span class="op">=</span> {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_depth'</span>: [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">13</span>, <span class="dv">15</span>, <span class="va">None</span>],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min_samples_leaf'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">16</span>]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>n_comb <span class="op">=</span> <span class="bu">len</span>(param_grid_tree[<span class="st">'max_depth'</span>]) <span class="op">*</span> <span class="bu">len</span>(param_grid_tree[<span class="st">'min_samples_leaf'</span>])</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Combinações: </span><span class="sc">{</span>n_comb<span class="sc">}</span><span class="ss"> | Modelos treinados: </span><span class="sc">{</span>n_comb <span class="op">*</span> <span class="dv">5</span><span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Combinações: 40 | Modelos treinados: 200</code></pre>
+</div>
+</div>
+<div id="20cd659d" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>grid_tree <span class="op">=</span> GridSearchCV(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    param_grid<span class="op">=</span>param_grid_tree,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>kf,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">'r2'</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>grid_tree.fit(X_train, y_train)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, grid_tree.best_params_)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor R² (CV): </span><span class="sc">{</span>grid_tree<span class="sc">.</span>best_score_<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'max_depth': 15, 'min_samples_leaf': 4}
+Melhor R² (CV): 0.778</code></pre>
+</div>
+</div>
+<p>Todos os resultados ficam guardados no atributo <code>cv_results_</code>. Vamos ver as 10 melhores combinações:</p>
+<div id="fc39fba8" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>res_tree <span class="op">=</span> pd.DataFrame(grid_tree.cv_results_)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>res_tree[[<span class="st">'param_max_depth'</span>, <span class="st">'param_min_samples_leaf'</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">'mean_test_score'</span>, <span class="st">'std_test_score'</span>, <span class="st">'rank_test_score'</span>]] <span class="op">\</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'rank_test_score'</span>).head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">param_max_depth</th>
+<th data-quarto-table-cell-role="th">param_min_samples_leaf</th>
+<th data-quarto-table-cell-role="th">mean_test_score</th>
+<th data-quarto-table-cell-role="th">std_test_score</th>
+<th data-quarto-table-cell-role="th">rank_test_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">32</th>
+<td>15</td>
+<td>4</td>
+<td>0.777528</td>
+<td>0.033679</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">37</th>
+<td>None</td>
+<td>4</td>
+<td>0.777454</td>
+<td>0.033637</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">27</th>
+<td>13</td>
+<td>4</td>
+<td>0.777453</td>
+<td>0.033721</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>9</td>
+<td>4</td>
+<td>0.774255</td>
+<td>0.033282</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">22</th>
+<td>11</td>
+<td>4</td>
+<td>0.772991</td>
+<td>0.033047</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">28</th>
+<td>13</td>
+<td>8</td>
+<td>0.765638</td>
+<td>0.042894</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">38</th>
+<td>None</td>
+<td>8</td>
+<td>0.765638</td>
+<td>0.042894</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">33</th>
+<td>15</td>
+<td>8</td>
+<td>0.765638</td>
+<td>0.042894</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">23</th>
+<td>11</td>
+<td>8</td>
+<td>0.763590</td>
+<td>0.042188</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">18</th>
+<td>9</td>
+<td>8</td>
+<td>0.762269</td>
+<td>0.043244</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Um heatmap facilita a visualização da grade inteira:</p>
+<div id="6cb02e02" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>tabela_tree <span class="op">=</span> res_tree.pivot_table(index<span class="op">=</span><span class="st">'param_min_samples_leaf'</span>,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                                   columns<span class="op">=</span>res_tree[<span class="st">'param_max_depth'</span>].astype(<span class="bu">str</span>),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                                   values<span class="op">=</span><span class="st">'mean_test_score'</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>sns.heatmap(tabela_tree, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'.3f'</span>, cmap<span class="op">=</span>meu_cmap)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'max_depth'</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'min_samples_leaf'</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'R² médio (CV) - Grid Search da Árvore de Decisão'</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-25-output-1.png" width="554" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Por padrão (<code>refit=True</code>), após a busca o <code>GridSearchCV</code> treina novamente o modelo com os melhores hiperparâmetros usando <strong>todo</strong> o conjunto de treino. Esse modelo final fica disponível em <code>best_estimator_</code>.</p>
+<div id="4c2c7ca2" class="cell" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tree_otimizada <span class="op">=</span> grid_tree.best_estimator_</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>tree_otimizada</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: #000;
+  --sklearn-color-text-muted: #666;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+}
+
+#sk-container-id-1.light {
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: black;
+  --sklearn-color-background: white;
+  --sklearn-color-border-box: black;
+  --sklearn-color-icon: #696969;
+}
+
+#sk-container-id-1.dark {
+  --sklearn-color-text-on-default-background: white;
+  --sklearn-color-background: #111;
+  --sklearn-color-border-box: white;
+  --sklearn-color-icon: #878787;
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+#sk-container-id-1 label.sk-toggleable__label .caption {
+  font-size: 0.6rem;
+  font-weight: lighter;
+  color: var(--sklearn-color-text-muted);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  display: none;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-unfitted-level-0);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 0.5em;
+  text-align: center;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-3) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3) 1pt solid;
+  color: var(--sklearn-color-fitted-level-3);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  border: var(--sklearn-color-fitted-level-0) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-0);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  border: var(--sklearn-color-fitted-level-0) 1pt solid;
+  color: var(--sklearn-color-fitted-level-0);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-unfitted-level-0);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+
+.estimator-table {
+    font-family: monospace;
+}
+
+.estimator-table summary {
+    padding: .5rem;
+    cursor: pointer;
+}
+
+.estimator-table summary::marker {
+    font-size: 0.7rem;
+}
+
+.estimator-table details[open] {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    padding-bottom: 0.3rem;
+}
+
+.estimator-table .parameters-table {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 0;
+}
+
+.estimator-table .parameters-table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+.estimator-table .parameters-table tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+.estimator-table .parameters-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+.estimator-table table td {
+    border: 1px solid rgba(106, 105, 104, 0.232);
+}
+
+/*
+    `table td`is set in notebook with right text-align.
+    We need to overwrite it.
+*/
+.estimator-table table td.param {
+    text-align: left;
+    position: relative;
+    padding: 0;
+}
+
+.user-set td {
+    color:rgb(255, 94, 0);
+    text-align: left !important;
+}
+
+.user-set td.value {
+    color:rgb(255, 94, 0);
+    background-color: transparent;
+}
+
+.default td {
+    color: black;
+    text-align: left !important;
+}
+
+.user-set td i,
+.default td i {
+    color: black;
+}
+
+/*
+    Styles for parameter documentation links
+    We need styling for visited so jupyter doesn't overwrite it
+*/
+a.param-doc-link,
+a.param-doc-link:link,
+a.param-doc-link:visited {
+    text-decoration: underline dashed;
+    text-underline-offset: .3em;
+    color: inherit;
+    display: block;
+    padding: .5em;
+}
+
+/* "hack" to make the entire area of the cell containing the link clickable */
+a.param-doc-link::before {
+    position: absolute;
+    content: "";
+    inset: 0;
+}
+
+.param-doc-description {
+    display: none;
+    position: absolute;
+    z-index: 9999;
+    left: 0;
+    padding: .5ex;
+    margin-left: 1.5em;
+    color: var(--sklearn-color-text);
+    box-shadow: .3em .3em .4em #999;
+    width: max-content;
+    text-align: left;
+    max-height: 10em;
+    overflow-y: auto;
+
+    /* unfitted */
+    background: var(--sklearn-color-unfitted-level-0);
+    border: thin solid var(--sklearn-color-unfitted-level-3);
+}
+
+/* Fitted state for parameter tooltips */
+.fitted .param-doc-description {
+    /* fitted */
+    background: var(--sklearn-color-fitted-level-0);
+    border: thin solid var(--sklearn-color-fitted-level-3);
+}
+
+.param-doc-link:hover .param-doc-description {
+    display: block;
+}
+
+.copy-paste-icon {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTIwOCAwTDMzMi4xIDBjMTIuNyAwIDI0LjkgNS4xIDMzLjkgMTQuMWw2Ny45IDY3LjljOSA5IDE0LjEgMjEuMiAxNC4xIDMzLjlMNDQ4IDMzNmMwIDI2LjUtMjEuNSA0OC00OCA0OGwtMTkyIDBjLTI2LjUgMC00OC0yMS41LTQ4LTQ4bDAtMjg4YzAtMjYuNSAyMS41LTQ4IDQ4LTQ4ek00OCAxMjhsODAgMCAwIDY0LTY0IDAgMCAyNTYgMTkyIDAgMC0zMiA2NCAwIDAgNDhjMCAyNi41LTIxLjUgNDgtNDggNDhMNDggNTEyYy0yNi41IDAtNDgtMjEuNS00OC00OEwwIDE3NmMwLTI2LjUgMjEuNS00OCA0OC00OHoiLz48L3N2Zz4=);
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    background-position: 0;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=15, min_samples_leaf=4, random_state=42)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>DecisionTreeRegressor</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html">?<span>Documentation for DecisionTreeRegressor</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted" data-param-prefix="">
+        <div class="estimator-table">
+            <details>
+                <summary>Parameters</summary>
+                
+<table class="parameters-table caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<tbody>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=criterion,-%7B%22squared_error%22%2C%20%22friedman_mse%22%2C%20%22absolute_error%22%2C%20%20%20%20%20%20%20%20%20%20%20%20%20%22poisson%22%7D%2C%20default%3D%22squared_error%22" class="param-doc-link" rel="noreferrer" target="_blank">criterion <span class="param-doc-description">criterion: {"squared_error", "friedman_mse", "absolute_error", "poisson"}, default="squared_error"<br>
+<br>
+The function to measure the quality of a split. Supported criteria<br>
+are "squared_error" for the mean squared error, which is equal to<br>
+variance reduction as feature selection criterion and minimizes the L2<br>
+loss using the mean of each terminal node, "friedman_mse", which uses<br>
+mean squared error with Friedman's improvement score for potential<br>
+splits, "absolute_error" for the mean absolute error, which minimizes<br>
+the L1 loss using the median of each terminal node, and "poisson" which<br>
+uses reduction in the half mean Poisson deviance to find splits.<br>
+<br>
+.. versionadded:: 0.18<br>
+Mean Absolute Error (MAE) criterion.<br>
+<br>
+.. versionadded:: 0.24<br>
+Poisson deviance criterion.</span></a></td>
+<td class="value">'squared_error'</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=splitter,-%7B%22best%22%2C%20%22random%22%7D%2C%20default%3D%22best%22" class="param-doc-link" rel="noreferrer" target="_blank">splitter <span class="param-doc-description">splitter: {"best", "random"}, default="best"<br>
+<br>
+The strategy used to choose the split at each node. Supported<br>
+strategies are "best" to choose the best split and "random" to choose<br>
+the best random split.</span></a></td>
+<td class="value">'best'</td>
+</tr>
+<tr class="user-set odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=max_depth,-int%2C%20default%3DNone" class="param-doc-link" rel="noreferrer" target="_blank">max_depth <span class="param-doc-description">max_depth: int, default=None<br>
+<br>
+The maximum depth of the tree. If None, then nodes are expanded until<br>
+all leaves are pure or until all leaves contain less than<br>
+min_samples_split samples.<br>
+<br>
+For an example of how ``max_depth`` influences the model, see<br>
+:ref:`sphx_glr_auto_examples_tree_plot_tree_regression.py`.</span></a></td>
+<td class="value">15</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=min_samples_split,-int%20or%20float%2C%20default%3D2" class="param-doc-link" rel="noreferrer" target="_blank">min_samples_split <span class="param-doc-description">min_samples_split: int or float, default=2<br>
+<br>
+The minimum number of samples required to split an internal node:<br>
+<br>
+- If int, then consider `min_samples_split` as the minimum number.<br>
+- If float, then `min_samples_split` is a fraction and<br>
+`ceil(min_samples_split * n_samples)` are the minimum<br>
+number of samples for each split.<br>
+<br>
+.. versionchanged:: 0.18<br>
+Added float values for fractions.</span></a></td>
+<td class="value">2</td>
+</tr>
+<tr class="user-set odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=min_samples_leaf,-int%20or%20float%2C%20default%3D1" class="param-doc-link" rel="noreferrer" target="_blank">min_samples_leaf <span class="param-doc-description">min_samples_leaf: int or float, default=1<br>
+<br>
+The minimum number of samples required to be at a leaf node.<br>
+A split point at any depth will only be considered if it leaves at<br>
+least ``min_samples_leaf`` training samples in each of the left and<br>
+right branches. This may have the effect of smoothing the model,<br>
+especially in regression.<br>
+<br>
+- If int, then consider `min_samples_leaf` as the minimum number.<br>
+- If float, then `min_samples_leaf` is a fraction and<br>
+`ceil(min_samples_leaf * n_samples)` are the minimum<br>
+number of samples for each node.<br>
+<br>
+.. versionchanged:: 0.18<br>
+Added float values for fractions.</span></a></td>
+<td class="value">4</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=min_weight_fraction_leaf,-float%2C%20default%3D0.0" class="param-doc-link" rel="noreferrer" target="_blank">min_weight_fraction_leaf <span class="param-doc-description">min_weight_fraction_leaf: float, default=0.0<br>
+<br>
+The minimum weighted fraction of the sum total of weights (of all<br>
+the input samples) required to be at a leaf node. Samples have<br>
+equal weight when sample_weight is not provided.</span></a></td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=max_features,-int%2C%20float%20or%20%7B%22sqrt%22%2C%20%22log2%22%7D%2C%20default%3DNone" class="param-doc-link" rel="noreferrer" target="_blank">max_features <span class="param-doc-description">max_features: int, float or {"sqrt", "log2"}, default=None<br>
+<br>
+The number of features to consider when looking for the best split:<br>
+<br>
+- If int, then consider `max_features` features at each split.<br>
+- If float, then `max_features` is a fraction and<br>
+`max(1, int(max_features * n_features_in_))` features are considered at each<br>
+split.<br>
+- If "sqrt", then `max_features=sqrt(n_features)`.<br>
+- If "log2", then `max_features=log2(n_features)`.<br>
+- If None, then `max_features=n_features`.<br>
+<br>
+Note: the search for a split does not stop until at least one<br>
+valid partition of the node samples is found, even if it requires to<br>
+effectively inspect more than ``max_features`` features.</span></a></td>
+<td class="value">None</td>
+</tr>
+<tr class="user-set even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=random_state,-int%2C%20RandomState%20instance%20or%20None%2C%20default%3DNone" class="param-doc-link" rel="noreferrer" target="_blank">random_state <span class="param-doc-description">random_state: int, RandomState instance or None, default=None<br>
+<br>
+Controls the randomness of the estimator. The features are always<br>
+randomly permuted at each split, even if ``splitter`` is set to<br>
+``"best"``. When ``max_features &lt; n_features``, the algorithm will<br>
+select ``max_features`` at random at each split before finding the best<br>
+split among them. But the best found split may vary across different<br>
+runs, even if ``max_features=n_features``. That is the case, if the<br>
+improvement of the criterion is identical for several splits and one<br>
+split has to be selected at random. To obtain a deterministic behaviour<br>
+during fitting, ``random_state`` has to be fixed to an integer.<br>
+See :term:`Glossary <random_state>` for details.</random_state></span></a></td>
+<td class="value">42</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=max_leaf_nodes,-int%2C%20default%3DNone" class="param-doc-link" rel="noreferrer" target="_blank">max_leaf_nodes <span class="param-doc-description">max_leaf_nodes: int, default=None<br>
+<br>
+Grow a tree with ``max_leaf_nodes`` in best-first fashion.<br>
+Best nodes are defined as relative reduction in impurity.<br>
+If None then unlimited number of leaf nodes.</span></a></td>
+<td class="value">None</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=min_impurity_decrease,-float%2C%20default%3D0.0" class="param-doc-link" rel="noreferrer" target="_blank">min_impurity_decrease <span class="param-doc-description">min_impurity_decrease: float, default=0.0<br>
+<br>
+A node will be split if this split induces a decrease of the impurity<br>
+greater than or equal to this value.<br>
+<br>
+The weighted impurity decrease equation is the following::<br>
+<br>
+N_t / N * (impurity - N_t_R / N_t * right_impurity<br>
+- N_t_L / N_t * left_impurity)<br>
+<br>
+where ``N`` is the total number of samples, ``N_t`` is the number of<br>
+samples at the current node, ``N_t_L`` is the number of samples in the<br>
+left child, and ``N_t_R`` is the number of samples in the right child.<br>
+<br>
+``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,<br>
+if ``sample_weight`` is passed.<br>
+<br>
+.. versionadded:: 0.19</span></a></td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=ccp_alpha,-non-negative%20float%2C%20default%3D0.0" class="param-doc-link" rel="noreferrer" target="_blank">ccp_alpha <span class="param-doc-description">ccp_alpha: non-negative float, default=0.0<br>
+<br>
+Complexity parameter used for Minimal Cost-Complexity Pruning. The<br>
+subtree with the largest cost complexity that is smaller than<br>
+``ccp_alpha`` will be chosen. By default, no pruning is performed. See<br>
+:ref:`minimal_cost_complexity_pruning` for details. See<br>
+:ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`<br>
+for an example of such pruning.<br>
+<br>
+.. versionadded:: 0.22</span></a></td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param"><a href="https://scikit-learn.org/1.8/modules/generated/sklearn.tree.DecisionTreeRegressor.html#:~:text=monotonic_cst,-array-like%20of%20int%20of%20shape%20%28n_features%29%2C%20default%3DNone" class="param-doc-link" rel="noreferrer" target="_blank">monotonic_cst <span class="param-doc-description">monotonic_cst: array-like of int of shape (n_features), default=None<br>
+<br>
+Indicates the monotonicity constraint to enforce on each feature.<br>
+- 1: monotonic increase<br>
+- 0: no constraint<br>
+- -1: monotonic decrease<br>
+<br>
+If monotonic_cst is None, no constraints are applied.<br>
+<br>
+Monotonicity constraints are not supported for:<br>
+- multioutput regressions (i.e. when `n_outputs_ &gt; 1`),<br>
+- regressions trained on data with missing values.<br>
+<br>
+Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.<br>
+<br>
+.. versionadded:: 1.4</monotonic_cst_gbdt></span></a></td>
+<td class="value">None</td>
+</tr>
+</tbody>
+</table>
+
+            </details>
+        </div>
+    </div></div></div></div></div><script>function copyToClipboard(text, element) {
+    // Get the parameter prefix from the closest toggleable content
+    const toggleableContent = element.closest('.sk-toggleable__content');
+    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
+    const fullParamName = paramPrefix ? `${paramPrefix}${text}` : text;
+
+    const originalStyle = element.style;
+    const computedStyle = window.getComputedStyle(element);
+    const originalWidth = computedStyle.width;
+    const originalHTML = element.innerHTML.replace('Copied!', '');
+
+    navigator.clipboard.writeText(fullParamName)
+        .then(() => {
+            element.style.width = originalWidth;
+            element.style.color = 'green';
+            element.innerHTML = "Copied!";
+
+            setTimeout(() => {
+                element.innerHTML = originalHTML;
+                element.style = originalStyle;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Failed to copy:', err);
+            element.style.color = 'red';
+            element.innerHTML = "Failed!";
+            setTimeout(() => {
+                element.innerHTML = originalHTML;
+                element.style = originalStyle;
+            }, 2000);
+        });
+    return false;
+}
+
+document.querySelectorAll('.copy-paste-icon').forEach(function(element) {
+    const toggleableContent = element.closest('.sk-toggleable__content');
+    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
+    const paramName = element.parentElement.nextElementSibling
+        .textContent.trim().split(' ')[0];
+    const fullParamName = paramPrefix ? `${paramPrefix}${paramName}` : paramName;
+
+    element.setAttribute('title', fullParamName);
+});
+
+
+/**
+ * Adapted from Skrub
+ * https://github.com/skrub-data/skrub/blob/403466d1d5d4dc76a7ef569b3f8228db59a31dc3/skrub/_reporting/_data/templates/report.js#L789
+ * @returns "light" or "dark"
+ */
+function detectTheme(element) {
+    const body = document.querySelector('body');
+
+    // Check VSCode theme
+    const themeKindAttr = body.getAttribute('data-vscode-theme-kind');
+    const themeNameAttr = body.getAttribute('data-vscode-theme-name');
+
+    if (themeKindAttr && themeNameAttr) {
+        const themeKind = themeKindAttr.toLowerCase();
+        const themeName = themeNameAttr.toLowerCase();
+
+        if (themeKind.includes("dark") || themeName.includes("dark")) {
+            return "dark";
+        }
+        if (themeKind.includes("light") || themeName.includes("light")) {
+            return "light";
+        }
+    }
+
+    // Check Jupyter theme
+    if (body.getAttribute('data-jp-theme-light') === 'false') {
+        return 'dark';
+    } else if (body.getAttribute('data-jp-theme-light') === 'true') {
+        return 'light';
+    }
+
+    // Guess based on a parent element's color
+    const color = window.getComputedStyle(element.parentNode, null).getPropertyValue('color');
+    const match = color.match(/^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i);
+    if (match) {
+        const [r, g, b] = [
+            parseFloat(match[1]),
+            parseFloat(match[2]),
+            parseFloat(match[3])
+        ];
+
+        // https://en.wikipedia.org/wiki/HSL_and_HSV#Lightness
+        const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        if (luma > 180) {
+            // If the text is very bright we have a dark theme
+            return 'dark';
+        }
+        if (luma < 75) {
+            // If the text is very dark we have a light theme
+            return 'light';
+        }
+        // Otherwise fall back to the next heuristic.
+    }
+
+    // Fallback to system preference
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+
+function forceTheme(elementId) {
+    const estimatorElement = document.querySelector(`#${elementId}`);
+    if (estimatorElement === null) {
+        console.error(`Element with id ${elementId} not found.`);
+    } else {
+        const theme = detectTheme(estimatorElement);
+        estimatorElement.classList.add(theme);
+    }
+}
+
+forceTheme('sk-container-id-1');</script>
+</div>
+</div>
+</section>
+<section id="randomized-search-busca-aleatória" class="level3">
+<h3 class="anchored" data-anchor-id="randomized-search-busca-aleatória">Randomized Search: busca aleatória</h3>
+<p>O Grid Search fica caro rapidamente: com 4 hiperparâmetros e 5 valores cada, seriam 5⁴ = 625 combinações × 5 folds = 3125 modelos. Para modelos mais pesados, como o Random Forest, é mais eficiente usar o <code>RandomizedSearchCV</code>, que <strong>sorteia</strong> um número fixo de combinações (<code>n_iter</code>) a partir de listas ou de distribuições de probabilidade.</p>
+<p>Vamos usar a distribuição <code>randint</code> do <code>scipy</code>, que sorteia números inteiros dentro de um intervalo.</p>
+<div id="d31f9dee" class="cell" data-execution_count="26">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>param_dist_rf <span class="op">=</span> {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'n_estimators'</span>: randint(<span class="dv">100</span>, <span class="dv">500</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_depth'</span>: [<span class="va">None</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">30</span>],</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min_samples_leaf'</span>: randint(<span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_features'</span>: [<span class="fl">1.0</span>, <span class="st">'sqrt'</span>, <span class="fl">0.5</span>]</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>random_rf <span class="op">=</span> RandomizedSearchCV(</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    RandomForestRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    param_distributions<span class="op">=</span>param_dist_rf,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    n_iter<span class="op">=</span><span class="dv">20</span>,            <span class="co"># número de combinações sorteadas</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>kf,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    scoring<span class="op">=</span><span class="st">'r2'</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>random_rf.fit(X_train, y_train)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, random_rf.best_params_)</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor R² (CV): </span><span class="sc">{</span>random_rf<span class="sc">.</span>best_score_<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'max_depth': 15, 'max_features': 1.0, 'min_samples_leaf': 1, 'n_estimators': 413}
+Melhor R² (CV): 0.855</code></pre>
+</div>
+</div>
+<div id="a1939b5e" class="cell" data-execution_count="27">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>res_rf <span class="op">=</span> pd.DataFrame(random_rf.cv_results_)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>res_rf[[<span class="st">'param_n_estimators'</span>, <span class="st">'param_max_depth'</span>, <span class="st">'param_min_samples_leaf'</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">'param_max_features'</span>, <span class="st">'mean_test_score'</span>, <span class="st">'std_test_score'</span>, <span class="st">'rank_test_score'</span>]] <span class="op">\</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'rank_test_score'</span>).head(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">param_n_estimators</th>
+<th data-quarto-table-cell-role="th">param_max_depth</th>
+<th data-quarto-table-cell-role="th">param_min_samples_leaf</th>
+<th data-quarto-table-cell-role="th">param_max_features</th>
+<th data-quarto-table-cell-role="th">mean_test_score</th>
+<th data-quarto-table-cell-role="th">std_test_score</th>
+<th data-quarto-table-cell-role="th">rank_test_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">5</th>
+<td>413</td>
+<td>15</td>
+<td>1</td>
+<td>1.0</td>
+<td>0.855201</td>
+<td>0.019540</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>149</td>
+<td>10</td>
+<td>1</td>
+<td>sqrt</td>
+<td>0.853286</td>
+<td>0.018073</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>466</td>
+<td>20</td>
+<td>2</td>
+<td>1.0</td>
+<td>0.849368</td>
+<td>0.023476</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>364</td>
+<td>15</td>
+<td>2</td>
+<td>1.0</td>
+<td>0.848481</td>
+<td>0.023410</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1</th>
+<td>314</td>
+<td>20</td>
+<td>3</td>
+<td>0.5</td>
+<td>0.842771</td>
+<td>0.022784</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>406</td>
+<td>15</td>
+<td>3</td>
+<td>1.0</td>
+<td>0.841057</td>
+<td>0.025851</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>463</td>
+<td>10</td>
+<td>3</td>
+<td>0.5</td>
+<td>0.838009</td>
+<td>0.022405</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">16</th>
+<td>369</td>
+<td>15</td>
+<td>4</td>
+<td>sqrt</td>
+<td>0.834745</td>
+<td>0.023900</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>408</td>
+<td>15</td>
+<td>6</td>
+<td>0.5</td>
+<td>0.821886</td>
+<td>0.025500</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">14</th>
+<td>153</td>
+<td>15</td>
+<td>6</td>
+<td>sqrt</td>
+<td>0.820835</td>
+<td>0.025617</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Vamos ver como o R² variou entre as 20 combinações sorteadas:</p>
+<div id="acbf3828" class="cell" data-execution_count="28">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>res_rf_ord <span class="op">=</span> res_rf.sort_values(<span class="st">'mean_test_score'</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>plt.errorbar(<span class="bu">range</span>(<span class="bu">len</span>(res_rf_ord)), res_rf_ord[<span class="st">'mean_test_score'</span>],</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>             yerr<span class="op">=</span>res_rf_ord[<span class="st">'std_test_score'</span>], fmt<span class="op">=</span><span class="st">'o'</span>, color<span class="op">=</span>minha_palette[<span class="dv">3</span>],</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>             ecolor<span class="op">=</span>minha_palette[<span class="dv">0</span>], capsize<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Combinação (ordenada pelo desempenho)'</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'R² médio (CV) ± desvio padrão'</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Randomized Search - Random Forest'</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-29-output-1.png" width="593" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="157f58a2" class="cell" data-execution_count="29">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>rf_otimizado <span class="op">=</span> random_rf.best_estimator_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="grid-search-com-pipeline-otimizando-o-svr" class="level3">
+<h3 class="anchored" data-anchor-id="grid-search-com-pipeline-otimizando-o-svr">Grid Search com Pipeline: otimizando o SVR</h3>
+<p>O SVR é muito sensível aos seus hiperparâmetros <code>C</code>, <code>gamma</code> e <code>epsilon</code>. Esses hiperparâmetros variam em ordens de grandeza, então é comum testar valores em <strong>escala logarítmica</strong> (por exemplo, 0.1, 1, 10, 100).</p>
+<p>Como o modelo está dentro de um <code>Pipeline</code>, os nomes dos hiperparâmetros recebem o prefixo do passo seguido de dois sublinhados: <code>svr__C</code>, <code>svr__gamma</code>, etc.</p>
+<div id="21ad107f" class="cell" data-execution_count="30">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>pipe_svr <span class="op">=</span> Pipeline([(<span class="st">'scaler'</span>, StandardScaler()),</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                     (<span class="st">'svr'</span>, SVR(kernel<span class="op">=</span><span class="st">'rbf'</span>))])</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>param_grid_svr <span class="op">=</span> {</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'svr__C'</span>: [<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>],</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'svr__gamma'</span>: [<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>],</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'svr__epsilon'</span>: [<span class="fl">0.01</span>, <span class="fl">0.1</span>]</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>grid_svr <span class="op">=</span> GridSearchCV(pipe_svr, param_grid<span class="op">=</span>param_grid_svr,</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>                        cv<span class="op">=</span>kf, scoring<span class="op">=</span><span class="st">'r2'</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>grid_svr.fit(X_train, y_train)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, grid_svr.best_params_)</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor R² (CV): </span><span class="sc">{</span>grid_svr<span class="sc">.</span>best_score_<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'svr__C': 1, 'svr__epsilon': 0.01, 'svr__gamma': 1}
+Melhor R² (CV): 0.778</code></pre>
+</div>
+</div>
+<p>Vamos visualizar o efeito conjunto de <code>C</code> e <code>gamma</code> (fixando o melhor <code>epsilon</code>):</p>
+<div id="2df84f81" class="cell" data-execution_count="31">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>res_svr <span class="op">=</span> pd.DataFrame(grid_svr.cv_results_)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>melhor_eps <span class="op">=</span> grid_svr.best_params_[<span class="st">'svr__epsilon'</span>]</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>tabela_svr <span class="op">=</span> res_svr[res_svr[<span class="st">'param_svr__epsilon'</span>] <span class="op">==</span> melhor_eps] <span class="op">\</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    .pivot_table(index<span class="op">=</span><span class="st">'param_svr__C'</span>, columns<span class="op">=</span><span class="st">'param_svr__gamma'</span>, values<span class="op">=</span><span class="st">'mean_test_score'</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>sns.heatmap(tabela_svr, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'.3f'</span>, cmap<span class="op">=</span>meu_cmap)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'gamma'</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'C'</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'R² médio (CV) - SVR (epsilon = </span><span class="sc">{</span>melhor_eps<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-32-output-1.png" width="554" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note como combinações ruins de <code>C</code> e <code>gamma</code> podem produzir um desempenho muito inferior: por isso o SVR com parâmetros padrão raramente é a melhor versão do modelo.</p>
+<div id="d06df339" class="cell" data-execution_count="32">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>svr_otimizado <span class="op">=</span> grid_svr.best_estimator_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="validação-cruzada-aninhada-nested-cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="validação-cruzada-aninhada-nested-cross-validation">Validação cruzada aninhada (nested cross validation)</h3>
+<p>Um ponto sutil: o <code>best_score_</code> de uma busca é a média da CV da <strong>melhor</strong> combinação entre muitas testadas, então ele tende a ser um pouco otimista (escolhemos o máximo, que carrega um pouco de sorte). Para obter uma estimativa sem viés do processo completo “busca + treino”, podemos usar a <strong>validação cruzada aninhada</strong>:</p>
+<ul>
+<li>um <strong>laço interno</strong> de CV escolhe os hiperparâmetros (o <code>GridSearchCV</code>);</li>
+<li>um <strong>laço externo</strong> de CV avalia o desempenho do modelo escolhido em dados que não participaram da busca.</li>
+</ul>
+<p>No scikit-learn, basta passar o objeto <code>GridSearchCV</code> para o <code>cross_val_score</code>:</p>
+<div id="02debdd0" class="cell" data-execution_count="33">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>cv_interno <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>cv_externo <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>busca_tree <span class="op">=</span> GridSearchCV(DecisionTreeRegressor(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                          param_grid<span class="op">=</span>param_grid_tree, cv<span class="op">=</span>cv_interno,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                          scoring<span class="op">=</span><span class="st">'r2'</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>scores_aninhados <span class="op">=</span> cross_val_score(busca_tree, X_train, y_train,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>                                   cv<span class="op">=</span>cv_externo, scoring<span class="op">=</span><span class="st">'r2'</span>)</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'R² em cada fold externo:'</span>, np.<span class="bu">round</span>(scores_aninhados, <span class="dv">3</span>))</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'R² da CV aninhada : </span><span class="sc">{</span>scores_aninhados<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ± </span><span class="sc">{</span>scores_aninhados<span class="sc">.</span>std()<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'best_score_ (CV simples): </span><span class="sc">{</span>grid_tree<span class="sc">.</span>best_score_<span class="sc">:.3f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R² em cada fold externo: [0.664 0.753 0.826 0.781 0.711]
+R² da CV aninhada : 0.747 ± 0.056
+best_score_ (CV simples): 0.778</code></pre>
+</div>
+</div>
+<p>A CV aninhada é mais cara computacionalmente (aqui treinamos 5 × 40 × 5 = 1000 árvores), por isso a aplicamos apenas à árvore de decisão, que é rápida.</p>
+</section>
+</section>
+<section id="parte-3---avaliação-final-no-conjunto-de-teste" class="level2">
+<h2 class="anchored" data-anchor-id="parte-3---avaliação-final-no-conjunto-de-teste">Parte 3 - Avaliação final no conjunto de teste</h2>
+<p>Finalmente vamos “abrir o cofre” e avaliar no conjunto de teste os modelos <strong>padrão</strong> (como no Tutorial 7) e os modelos <strong>otimizados</strong>. Para evitar repetir código, vamos criar uma função que calcula os mesmos indicadores do Tutorial 7.</p>
+<div id="84de4661" class="cell" data-execution_count="34">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> avaliar(modelo, nome, versao):</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> modelo.predict(X_test)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    mse <span class="op">=</span> mean_squared_error(y_test, y_pred)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">'R2'</span>: r2_score(y_test, y_pred),</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">'MSE'</span>: mse,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">'RMSE'</span>: np.sqrt(mse),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Modelo'</span>: nome,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Versão'</span>: versao}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Treinamos os modelos padrão com todo o conjunto de treino (os otimizados já foram treinados pelo <code>refit</code> das buscas):</p>
+<div id="565432ee" class="cell" data-execution_count="35">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> modelo <span class="kw">in</span> modelos.values():</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    modelo.fit(X_train, y_train)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>otimizados <span class="op">=</span> {</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Decision Tree'</span>: tree_otimizada,</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Random Forest'</span>: rf_otimizado,</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'SVR'</span>: svr_otimizado</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="684ad41a" class="cell" data-execution_count="36">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>linhas <span class="op">=</span> []</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome <span class="kw">in</span> modelos:</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    linhas.append(avaliar(modelos[nome], nome, <span class="st">'Padrão'</span>))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    linhas.append(avaliar(otimizados[nome], nome, <span class="st">'Otimizado'</span>))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>indicadores <span class="op">=</span> pd.DataFrame(linhas)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>indicadores</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">R2</th>
+<th data-quarto-table-cell-role="th">MSE</th>
+<th data-quarto-table-cell-role="th">RMSE</th>
+<th data-quarto-table-cell-role="th">Modelo</th>
+<th data-quarto-table-cell-role="th">Versão</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0.763251</td>
+<td>0.074327</td>
+<td>0.272629</td>
+<td>Decision Tree</td>
+<td>Padrão</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>0.812646</td>
+<td>0.058819</td>
+<td>0.242527</td>
+<td>Decision Tree</td>
+<td>Otimizado</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>0.853280</td>
+<td>0.046062</td>
+<td>0.214621</td>
+<td>Random Forest</td>
+<td>Padrão</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.853653</td>
+<td>0.045945</td>
+<td>0.214348</td>
+<td>Random Forest</td>
+<td>Otimizado</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.792801</td>
+<td>0.065049</td>
+<td>0.255048</td>
+<td>SVR</td>
+<td>Padrão</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>0.771713</td>
+<td>0.071670</td>
+<td>0.267713</td>
+<td>SVR</td>
+<td>Otimizado</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Vamos comparar lado a lado o R² e o RMSE de cada versão:</p>
+<div id="c574ad52" class="cell" data-execution_count="37">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">4</span>))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>indicadores, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'R2'</span>, hue<span class="op">=</span><span class="st">'Versão'</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>            palette<span class="op">=</span>[minha_palette[<span class="dv">0</span>], minha_palette[<span class="dv">1</span>]], ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'R² no teste (maior é melhor)'</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylim(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>indicadores, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'RMSE'</span>, hue<span class="op">=</span><span class="st">'Versão'</span>,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>            palette<span class="op">=</span>[minha_palette[<span class="dv">0</span>], minha_palette[<span class="dv">1</span>]], ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'RMSE no teste (menor é melhor)'</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-38-output-1.png" width="1046" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>E o mesmo gráfico comparativo RMSE x R² do Tutorial 7, agora incluindo as versões otimizadas:</p>
+<div id="0a629e44" class="cell" data-execution_count="38">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> sns.scatterplot(data<span class="op">=</span>indicadores, x<span class="op">=</span><span class="st">'R2'</span>, y<span class="op">=</span><span class="st">'RMSE'</span>, hue<span class="op">=</span><span class="st">'Modelo'</span>,</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                      style<span class="op">=</span><span class="st">'Versão'</span>, s<span class="op">=</span><span class="dv">150</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>fig.set_xlim(<span class="fl">0.5</span>, <span class="dv">1</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>fig.set_ylim(<span class="dv">0</span>, <span class="fl">0.4</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Gráfico comparativo entre os indicadores RMSE x R2'</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-39-output-1.png" width="602" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Por fim, o gráfico de valores verdadeiros vs.&nbsp;preditos para o melhor modelo:</p>
+<div id="658e1b08" class="cell" data-execution_count="39">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>melhor <span class="op">=</span> indicadores.sort_values(<span class="st">'R2'</span>, ascending<span class="op">=</span><span class="va">False</span>).iloc[<span class="dv">0</span>]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>modelo_final <span class="op">=</span> otimizados[melhor[<span class="st">'Modelo'</span>]] <span class="cf">if</span> melhor[<span class="st">'Versão'</span>] <span class="op">==</span> <span class="st">'Otimizado'</span> <span class="cf">else</span> modelos[melhor[<span class="st">'Modelo'</span>]]</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>y_pred_final <span class="op">=</span> modelo_final.predict(X_test)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_test, y_pred_final, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span>minha_palette[<span class="dv">3</span>])</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Log Preço verdadeiro (y_test)"</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Log Preço predito (y_pred)"</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f"Melhor modelo: </span><span class="sc">{</span>melhor[<span class="st">'Modelo'</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>melhor[<span class="st">'Versão'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Adicionar linha diagonal</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="bu">min</span>(y_test), <span class="bu">max</span>(y_test)], [<span class="bu">min</span>(y_test), <span class="bu">max</span>(y_test)], color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial9_files/figure-html/cell-40-output-1.png" width="585" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<ul>
+<li>Uma única divisão treino/teste gera uma estimativa de desempenho <strong>ruidosa</strong>, que depende de quais observações caíram em cada conjunto.</li>
+<li>A <strong>validação cruzada k-fold</strong> usa todas as observações para treinar e validar, retornando uma média e um desvio padrão do desempenho. As funções principais são <code>KFold</code>, <code>cross_val_score</code> e <code>cross_validate</code>.</li>
+<li>Etapas de pré-processamento (como o <code>StandardScaler</code>) devem ficar dentro de um <strong><code>Pipeline</code></strong>, para serem ajustadas apenas nos folds de treino.</li>
+<li><strong>Hiperparâmetros</strong> são escolhidos antes do treino. A <code>validation_curve</code> mostra o efeito de um hiperparâmetro e ajuda a identificar underfitting e overfitting.</li>
+<li>O <strong><code>GridSearchCV</code></strong> testa todas as combinações de uma grade; o <strong><code>RandomizedSearchCV</code></strong> sorteia um número fixo de combinações e é mais eficiente para espaços grandes.</li>
+<li>A <strong>CV aninhada</strong> fornece uma estimativa sem viés do desempenho do processo completo de otimização.</li>
+<li>O <strong>conjunto de teste</strong> só deve ser usado no final, para a avaliação definitiva dos modelos escolhidos.</li>
+</ul>
+</section>
+<section id="exercícios" class="level2">
+<h2 class="anchored" data-anchor-id="exercícios">Exercícios</h2>
+<ol type="1">
+<li>Repita a validação cruzada dos modelos padrão usando <code>KFold(n_splits=10)</code>. O ranking dos modelos muda?</li>
+<li>Faça a curva de validação do Random Forest variando <code>n_estimators</code> de 10 a 300. A partir de quantas árvores o ganho deixa de ser relevante?</li>
+<li>Troque o <code>GridSearchCV</code> do SVR por um <code>RandomizedSearchCV</code> usando <code>scipy.stats.loguniform(1e-2, 1e2)</code> para <code>C</code> e <code>gamma</code>. Você consegue um resultado melhor com o mesmo número de modelos treinados?</li>
+<li>Altere o <code>scoring</code> das buscas para <code>'neg_root_mean_squared_error'</code>. Os melhores hiperparâmetros encontrados são os mesmos?</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

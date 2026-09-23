@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tutorial 10 - Métodos Avançados em Classificação – EPS-UFSC</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">EPS-UFSC</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-python" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais Python</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-python">    
+        <li>
+    <a class="dropdown-item" href="./pyTutorialPython.html">
+ <span class="dropdown-text">Tutorial de Instalação do Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial3.html">
+ <span class="dropdown-text">Tutorial 3 - Matplotlib</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Seaborn e GeoPandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5.html">
+ <span class="dropdown-text">Tutorial 5 - Quarto Dashboards em Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5b.html">
+ <span class="dropdown-text">Tutorial 5b - Mapas Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5c.html">
+ <span class="dropdown-text">Tutorial 5c - Dashboards Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial6.html">
+ <span class="dropdown-text">Tutorial 6 - Métodos não supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial7.html">
+ <span class="dropdown-text">Tutorial 7 - Métodos de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial8.html">
+ <span class="dropdown-text">Tutorial 8 - Métodos de Classificação</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial9.html">
+ <span class="dropdown-text">Tutorial 9 - Métodos Avançados de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial10.html">
+ <span class="dropdown-text">Tutorial 10 - Métodos Avançados em Classificação</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-r" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais R</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-r">    
+        <li>
+    <a class="dropdown-item" href="./Tutorial0.html">
+ <span class="dropdown-text">Tutorial 0 - Conhecendo o R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Ggplot2 e Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial_av_ggplot.html">
+ <span class="dropdown-text">Tutorial 3a - Ggplot Avançado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial3b.html">
+ <span class="dropdown-text">Tutorial 3b - Quarto Dashboards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Métodos Não Supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial5regtidymodels.html">
+ <span class="dropdown-text">Tutorial 5 - Métodos de Regressão e Classificação em R</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introdução" id="toc-introdução" class="nav-link active" data-scroll-target="#introdução">Introdução</a></li>
+  <li><a href="#carregando-os-pacotes" id="toc-carregando-os-pacotes" class="nav-link" data-scroll-target="#carregando-os-pacotes">Carregando os pacotes</a></li>
+  <li><a href="#lendo-e-preparando-os-dados" id="toc-lendo-e-preparando-os-dados" class="nav-link" data-scroll-target="#lendo-e-preparando-os-dados">Lendo e preparando os dados</a>
+  <ul class="collapse">
+  <li><a href="#classes-desbalanceadas" id="toc-classes-desbalanceadas" class="nav-link" data-scroll-target="#classes-desbalanceadas">Classes desbalanceadas</a></li>
+  <li><a href="#split-treinoteste" id="toc-split-treinoteste" class="nav-link" data-scroll-target="#split-treinoteste">Split treino/teste</a></li>
+  </ul></li>
+  <li><a href="#parte-1---validação-cruzada-em-classificação" id="toc-parte-1---validação-cruzada-em-classificação" class="nav-link" data-scroll-target="#parte-1---validação-cruzada-em-classificação">Parte 1 - Validação Cruzada em Classificação</a>
+  <ul class="collapse">
+  <li><a href="#métricas-além-da-acurácia" id="toc-métricas-além-da-acurácia" class="nav-link" data-scroll-target="#métricas-além-da-acurácia">Métricas além da acurácia</a></li>
+  <li><a href="#kfold-vs.-stratifiedkfold" id="toc-kfold-vs.-stratifiedkfold" class="nav-link" data-scroll-target="#kfold-vs.-stratifiedkfold">KFold vs.&nbsp;StratifiedKFold</a></li>
+  <li><a href="#implementando-o-k-fold-estratificado-na-mão" id="toc-implementando-o-k-fold-estratificado-na-mão" class="nav-link" data-scroll-target="#implementando-o-k-fold-estratificado-na-mão">Implementando o k-fold estratificado “na mão”</a></li>
+  <li><a href="#usando-cross_val_score-e-cross_validate" id="toc-usando-cross_val_score-e-cross_validate" class="nav-link" data-scroll-target="#usando-cross_val_score-e-cross_validate">Usando <code>cross_val_score</code> e <code>cross_validate</code></a></li>
+  <li><a href="#comparando-os-modelos-do-tutorial-8-com-validação-cruzada" id="toc-comparando-os-modelos-do-tutorial-8-com-validação-cruzada" class="nav-link" data-scroll-target="#comparando-os-modelos-do-tutorial-8-com-validação-cruzada">Comparando os modelos do Tutorial 8 com validação cruzada</a></li>
+  </ul></li>
+  <li><a href="#parte-2---otimização-de-hiperparâmetros" id="toc-parte-2---otimização-de-hiperparâmetros" class="nav-link" data-scroll-target="#parte-2---otimização-de-hiperparâmetros">Parte 2 - Otimização de Hiperparâmetros</a>
+  <ul class="collapse">
+  <li><a href="#principais-hiperparâmetros-dos-classificadores" id="toc-principais-hiperparâmetros-dos-classificadores" class="nav-link" data-scroll-target="#principais-hiperparâmetros-dos-classificadores">Principais hiperparâmetros dos classificadores</a></li>
+  <li><a href="#curva-de-validação-max_depth-da-árvore" id="toc-curva-de-validação-max_depth-da-árvore" class="nav-link" data-scroll-target="#curva-de-validação-max_depth-da-árvore">Curva de validação: <code>max_depth</code> da árvore</a></li>
+  <li><a href="#grid-search-regressão-logística" id="toc-grid-search-regressão-logística" class="nav-link" data-scroll-target="#grid-search-regressão-logística">Grid Search: Regressão Logística</a></li>
+  <li><a href="#grid-search-árvore-de-decisão" id="toc-grid-search-árvore-de-decisão" class="nav-link" data-scroll-target="#grid-search-árvore-de-decisão">Grid Search: Árvore de Decisão</a></li>
+  <li><a href="#randomized-search-random-forest" id="toc-randomized-search-random-forest" class="nav-link" data-scroll-target="#randomized-search-random-forest">Randomized Search: Random Forest</a></li>
+  <li><a href="#otimizando-o-limiar-de-decisão" id="toc-otimizando-o-limiar-de-decisão" class="nav-link" data-scroll-target="#otimizando-o-limiar-de-decisão">Otimizando o limiar de decisão</a></li>
+  <li><a href="#validação-cruzada-aninhada" id="toc-validação-cruzada-aninhada" class="nav-link" data-scroll-target="#validação-cruzada-aninhada">Validação cruzada aninhada</a></li>
+  </ul></li>
+  <li><a href="#parte-3---avaliação-final-no-conjunto-de-teste" id="toc-parte-3---avaliação-final-no-conjunto-de-teste" class="nav-link" data-scroll-target="#parte-3---avaliação-final-no-conjunto-de-teste">Parte 3 - Avaliação final no conjunto de teste</a>
+  <ul class="collapse">
+  <li><a href="#modelos-finais" id="toc-modelos-finais" class="nav-link" data-scroll-target="#modelos-finais">Modelos finais</a></li>
+  <li><a href="#indicadores" id="toc-indicadores" class="nav-link" data-scroll-target="#indicadores">Indicadores</a></li>
+  <li><a href="#matrizes-de-confusão" id="toc-matrizes-de-confusão" class="nav-link" data-scroll-target="#matrizes-de-confusão">Matrizes de confusão</a></li>
+  <li><a href="#curvas-roc" id="toc-curvas-roc" class="nav-link" data-scroll-target="#curvas-roc">Curvas ROC</a></li>
+  <li><a href="#relatório-do-melhor-modelo" id="toc-relatório-do-melhor-modelo" class="nav-link" data-scroll-target="#relatório-do-melhor-modelo">Relatório do melhor modelo</a></li>
+  </ul></li>
+  <li><a href="#resumo" id="toc-resumo" class="nav-link" data-scroll-target="#resumo">Resumo</a></li>
+  <li><a href="#exercícios" id="toc-exercícios" class="nav-link" data-scroll-target="#exercícios">Exercícios</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tutorial 10 - Métodos Avançados em Classificação</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introdução" class="level2">
+<h2 class="anchored" data-anchor-id="introdução">Introdução</h2>
+<p>No <a href="https://muriona.github.io/datasciencequarto/pyTutorial8.html"><code>Tutorial 8</code></a> treinamos três classificadores (Regressão Logística, Árvore de Decisão e Random Forest) para detectar <strong>fraudes em transações de cartão de crédito</strong>. Assim como no tutorial de regressão, avaliamos os modelos com <strong>uma única divisão</strong> treino/teste e escolhemos os hiperparâmetros “no olho” (por exemplo, <code>max_depth=6</code> na árvore).</p>
+<p>Neste tutorial vamos aplicar ao problema de classificação as duas técnicas que vimos para regressão:</p>
+<ol type="1">
+<li><strong>Validação cruzada k-fold</strong>, agora na sua versão <strong>estratificada</strong>, que é a mais adequada para classificação;</li>
+<li><strong>Otimização de hiperparâmetros</strong> com <code>GridSearchCV</code> e <code>RandomizedSearchCV</code>.</li>
+</ol>
+<p>Além disso, vamos ver dois temas que são específicos de classificação:</p>
+<ul>
+<li>por que a <strong>acurácia pode enganar</strong> quando as classes são desbalanceadas, e quais métricas usar no lugar dela;</li>
+<li>como otimizar o <strong>limiar de decisão</strong> (<em>threshold</em>) do classificador, que também é um hiperparâmetro.</li>
+</ul>
+</section>
+<section id="carregando-os-pacotes" class="level2">
+<h2 class="anchored" data-anchor-id="carregando-os-pacotes">Carregando os pacotes</h2>
+<div id="b5301bfb" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> (train_test_split, KFold, StratifiedKFold,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                                     cross_val_score, cross_validate, cross_val_predict,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                                     validation_curve, GridSearchCV, RandomizedSearchCV,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                     TunedThresholdClassifierCV)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (accuracy_score, precision_score, recall_score, f1_score,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                             roc_auc_score, roc_curve, confusion_matrix,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                             classification_report, make_scorer, precision_recall_curve)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> clone</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.dummy <span class="im">import</span> DummyClassifier</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeClassifier</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> randint</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Oculta avisos internos de versões recentes do seaborn/matplotlib (não afetam os resultados)</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>, category<span class="op">=</span><span class="pp">PendingDeprecationWarning</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="0c4aa392" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Nova versão detectada:"</span>, sklearn.__version__)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">'#d62828'</span>, <span class="st">'#f77f00'</span>, <span class="st">'#003049'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nova versão detectada: 1.8.0</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A classe <code>TunedThresholdClassifierCV</code> foi introduzida no scikit-learn 1.5. Se o <code>import</code> acima der erro, atualize o pacote com <code>pip install -U scikit-learn</code>.</p>
+</div>
+</div>
+</section>
+<section id="lendo-e-preparando-os-dados" class="level2">
+<h2 class="anchored" data-anchor-id="lendo-e-preparando-os-dados">Lendo e preparando os dados</h2>
+<p>Usaremos o mesmo dataset de transações do Tutorial 8, com 10.000 transações e 7 features. A exploração dos dados já foi feita lá, então vamos direto à preparação.</p>
+<div id="9d720885" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'pydata5/card_transdata.csv'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A coluna alvo vem como float (0.0 / 1.0); vamos convertê-la para inteiro</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'fraud'</span>] <span class="op">=</span> df[<span class="st">'fraud'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.DataFrame'&gt;
+RangeIndex: 10000 entries, 0 to 9999
+Data columns (total 8 columns):
+ #   Column                          Non-Null Count  Dtype  
+---  ------                          --------------  -----  
+ 0   distance_from_home              10000 non-null  float64
+ 1   distance_from_last_transaction  10000 non-null  float64
+ 2   ratio_to_median_purchase_price  10000 non-null  float64
+ 3   repeat_retailer                 10000 non-null  float64
+ 4   used_chip                       10000 non-null  float64
+ 5   used_pin_number                 10000 non-null  float64
+ 6   online_order                    10000 non-null  float64
+ 7   fraud                           10000 non-null  int64  
+dtypes: float64(7), int64(1)
+memory usage: 625.1 KB</code></pre>
+</div>
+</div>
+<section id="classes-desbalanceadas" class="level3">
+<h3 class="anchored" data-anchor-id="classes-desbalanceadas">Classes desbalanceadas</h3>
+<p>Antes de modelar, vamos olhar a proporção de fraudes, que é a informação mais importante para escolher como validar e avaliar os modelos.</p>
+<div id="d24b4b2a" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'fraud'</span>].value_counts(normalize<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>fraud
+0    0.912
+1    0.088
+Name: proportion, dtype: float64</code></pre>
+</div>
+</div>
+<div id="5d4113a3" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sns.countplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">'fraud'</span>, hue<span class="op">=</span><span class="st">'fraud'</span>, palette<span class="op">=</span>colors[<span class="dv">0</span>:<span class="dv">2</span>], legend<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribuição da variável alvo'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-6-output-1.png" width="602" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Apenas uma pequena fração das transações é fraude. Isto é um problema de <strong>classes desbalanceadas</strong> e tem duas consequências importantes:</p>
+<ol type="1">
+<li><strong>A acurácia engana.</strong> Um “modelo” que responde sempre <em>não é fraude</em> já teria uma acurácia altíssima, sem detectar nenhuma fraude.</li>
+<li><strong>As divisões aleatórias podem ficar desequilibradas</strong>, com folds contendo mais ou menos fraudes do que o dataset completo.</li>
+</ol>
+</section>
+<section id="split-treinoteste" class="level3">
+<h3 class="anchored" data-anchor-id="split-treinoteste">Split treino/teste</h3>
+<p>Separamos 30% dos dados para teste, como no Tutorial 8. A única diferença é o argumento <code>stratify=y</code>, que garante que a proporção de fraudes seja a mesma no treino e no teste.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Assim como no tutorial de regressão, o conjunto de teste fica guardado “no cofre” e só será usado na avaliação final. Toda a validação cruzada e a busca de hiperparâmetros usam <strong>apenas os dados de treino</strong>.</p>
+</div>
+</div>
+<div id="950b4116" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop([<span class="st">'fraud'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'fraud'</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                                                    random_state<span class="op">=</span><span class="dv">2025</span>, stratify<span class="op">=</span>y)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Treino: </span><span class="sc">{</span>X_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> linhas | Teste: </span><span class="sc">{</span>X_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> linhas'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'% fraude no treino: </span><span class="sc">{</span>y_train<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> | % fraude no teste: </span><span class="sc">{</span>y_test<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Treino: 7000 linhas | Teste: 3000 linhas
+% fraude no treino: 0.0880 | % fraude no teste: 0.0880</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="parte-1---validação-cruzada-em-classificação" class="level2">
+<h2 class="anchored" data-anchor-id="parte-1---validação-cruzada-em-classificação">Parte 1 - Validação Cruzada em Classificação</h2>
+<section id="métricas-além-da-acurácia" class="level3">
+<h3 class="anchored" data-anchor-id="métricas-além-da-acurácia">Métricas além da acurácia</h3>
+<p>Relembrando a matriz de confusão do Tutorial 8 (TP = verdadeiros positivos, TN = verdadeiros negativos, FP = falsos positivos, FN = falsos negativos), vamos usar as seguintes métricas:</p>
+<ul>
+<li><strong>Acurácia:</strong> percentual de acertos. <span class="math inline">\(A=\frac{TP+TN}{TP+FP+FN+TN}\)</span></li>
+<li><strong>Precisão:</strong> das transações que o modelo marcou como fraude, quantas realmente eram? <span class="math inline">\(P=\frac{TP}{TP+FP}\)</span></li>
+<li><strong>Recall (sensibilidade):</strong> das fraudes que existiam, quantas o modelo encontrou? <span class="math inline">\(R=\frac{TP}{TP+FN}\)</span></li>
+<li><strong>F1:</strong> média harmônica entre precisão e recall, que só é alta se as duas forem altas. <span class="math inline">\(F1=2\cdot\frac{P \cdot R}{P+R}\)</span></li>
+<li><strong>AUC:</strong> a “nota” da curva ROC, que vimos no Tutorial 8.</li>
+</ul>
+<p>Em detecção de fraude, o <strong>recall</strong> costuma ser crítico (deixar passar uma fraude é caro), mas a <strong>precisão</strong> também importa (bloquear o cartão de um cliente honesto gera transtorno). Por isso usaremos o <strong>F1</strong> como métrica principal para otimizar os modelos.</p>
+<p>Vamos criar um dicionário com essas métricas para usar em todo o tutorial. Para a precisão usamos <code>make_scorer</code> com <code>zero_division=0</code>, para evitar avisos quando um modelo não prevê nenhuma fraude.</p>
+<div id="3f967b40" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>metricas <span class="op">=</span> {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'acuracia'</span>: <span class="st">'accuracy'</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'precisao'</span>: make_scorer(precision_score, zero_division<span class="op">=</span><span class="dv">0</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'recall'</span>: <span class="st">'recall'</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'f1'</span>: <span class="st">'f1'</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'auc'</span>: <span class="st">'roc_auc'</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="kfold-vs.-stratifiedkfold" class="level3">
+<h3 class="anchored" data-anchor-id="kfold-vs.-stratifiedkfold">KFold vs.&nbsp;StratifiedKFold</h3>
+<p>O <code>KFold</code> que usamos na regressão divide as linhas de forma aleatória, sem olhar para a classe. Em classificação com classes raras, alguns folds podem ficar com muito mais (ou muito menos) fraudes do que outros.</p>
+<p>O <code>StratifiedKFold</code> resolve isso: ele garante que <strong>cada fold tenha a mesma proporção de classes</strong> do conjunto completo. Para enxergar a diferença, vamos usar uma amostra pequena de 300 linhas e dividi-la em 5 folds com cada estratégia.</p>
+<div id="2a00c36e" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>X_peq, y_peq <span class="op">=</span> X_train.iloc[:<span class="dv">300</span>], y_train.iloc[:<span class="dv">300</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2025</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2025</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>props <span class="op">=</span> []</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome, cv <span class="kw">in</span> [(<span class="st">'KFold'</span>, kf), (<span class="st">'StratifiedKFold'</span>, skf)]:</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, (idx_treino, idx_valid) <span class="kw">in</span> <span class="bu">enumerate</span>(cv.split(X_peq, y_peq)):</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        props.append({<span class="st">'Estratégia'</span>: nome, <span class="st">'Fold'</span>: i <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">'</span><span class="sc">% f</span><span class="st">raude'</span>: y_peq.iloc[idx_valid].mean()})</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>props <span class="op">=</span> pd.DataFrame(props)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>props, x<span class="op">=</span><span class="st">'Fold'</span>, y<span class="op">=</span><span class="st">'</span><span class="sc">% f</span><span class="st">raude'</span>, hue<span class="op">=</span><span class="st">'Estratégia'</span>, palette<span class="op">=</span>colors[<span class="dv">1</span>:<span class="dv">3</span>])</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.axhline(y_peq.mean(), color<span class="op">=</span>colors[<span class="dv">0</span>], linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'</span><span class="sc">% f</span><span class="st">raude na amostra'</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Proporção de fraudes em cada fold de validação'</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-9-output-1.png" width="597" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Com o <code>StratifiedKFold</code> todos os folds ficam praticamente na linha tracejada. <strong>Em classificação, sempre use a versão estratificada.</strong> Aliás, quando passamos um número inteiro para <code>cv</code> (por exemplo <code>cv=5</code>) em um classificador, o scikit-learn já usa <code>StratifiedKFold</code> automaticamente. Aqui vamos criar o objeto explicitamente para controlar o embaralhamento com <code>random_state</code>.</p>
+<p>A partir de agora usaremos o <code>skf</code> com 5 folds em todo o tutorial:</p>
+<div id="c39fe9b7" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2025</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="implementando-o-k-fold-estratificado-na-mão" class="level3">
+<h3 class="anchored" data-anchor-id="implementando-o-k-fold-estratificado-na-mão">Implementando o k-fold estratificado “na mão”</h3>
+<p>Vamos repetir o laço do tutorial de regressão, agora com a árvore de decisão do Tutorial 8 e as métricas de classificação.</p>
+<div id="43669262" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>resultados_folds <span class="op">=</span> []</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx_treino, idx_valid) <span class="kw">in</span> <span class="bu">enumerate</span>(skf.split(X_train, y_train)):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    X_tr, X_val <span class="op">=</span> X_train.iloc[idx_treino], X_train.iloc[idx_valid]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    y_tr, y_val <span class="op">=</span> y_train.iloc[idx_treino], y_train.iloc[idx_valid]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    modelo <span class="op">=</span> DecisionTreeClassifier(max_depth<span class="op">=</span><span class="dv">6</span>, class_weight<span class="op">=</span><span class="st">'balanced'</span>, random_state<span class="op">=</span><span class="dv">2025</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    modelo.fit(X_tr, y_tr)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    y_pred_val <span class="op">=</span> modelo.predict(X_val)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    resultados_folds.append({</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Fold'</span>: i <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'</span><span class="sc">% f</span><span class="st">raude'</span>: y_val.mean(),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Acurácia'</span>: accuracy_score(y_val, y_pred_val),</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Precisão'</span>: precision_score(y_val, y_pred_val),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'Recall'</span>: recall_score(y_val, y_pred_val),</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'F1'</span>: f1_score(y_val, y_pred_val)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>resultados_folds <span class="op">=</span> pd.DataFrame(resultados_folds)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>resultados_folds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Fold</th>
+<th data-quarto-table-cell-role="th">% fraude</th>
+<th data-quarto-table-cell-role="th">Acurácia</th>
+<th data-quarto-table-cell-role="th">Precisão</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1</td>
+<td>0.087857</td>
+<td>0.993571</td>
+<td>0.959677</td>
+<td>0.967480</td>
+<td>0.963563</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2</td>
+<td>0.087857</td>
+<td>0.995714</td>
+<td>0.975610</td>
+<td>0.975610</td>
+<td>0.975610</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>3</td>
+<td>0.087857</td>
+<td>0.999286</td>
+<td>0.991935</td>
+<td>1.000000</td>
+<td>0.995951</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>4</td>
+<td>0.087857</td>
+<td>0.997857</td>
+<td>0.976190</td>
+<td>1.000000</td>
+<td>0.987952</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>5</td>
+<td>0.088571</td>
+<td>0.996429</td>
+<td>0.991736</td>
+<td>0.967742</td>
+<td>0.979592</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="1c432a3b" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>resultados_folds.drop(columns<span class="op">=</span><span class="st">'Fold'</span>).agg([<span class="st">'mean'</span>, <span class="st">'std'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">% fraude</th>
+<th data-quarto-table-cell-role="th">Acurácia</th>
+<th data-quarto-table-cell-role="th">Precisão</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>0.088000</td>
+<td>0.996571</td>
+<td>0.979030</td>
+<td>0.982166</td>
+<td>0.980534</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">std</th>
+<td>0.000319</td>
+<td>0.002167</td>
+<td>0.013437</td>
+<td>0.016604</td>
+<td>0.012307</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="usando-cross_val_score-e-cross_validate" class="level3">
+<h3 class="anchored" data-anchor-id="usando-cross_val_score-e-cross_validate">Usando <code>cross_val_score</code> e <code>cross_validate</code></h3>
+<p>O mesmo resultado em uma linha com <code>cross_val_score</code>:</p>
+<div id="0a63c2b1" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>scores_f1 <span class="op">=</span> cross_val_score(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    DecisionTreeClassifier(max_depth<span class="op">=</span><span class="dv">6</span>, class_weight<span class="op">=</span><span class="st">'balanced'</span>, random_state<span class="op">=</span><span class="dv">2025</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    X_train, y_train, cv<span class="op">=</span>skf, scoring<span class="op">=</span><span class="st">'f1'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'F1 em cada fold:'</span>, np.<span class="bu">round</span>(scores_f1, <span class="dv">4</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'F1 médio: </span><span class="sc">{</span>scores_f1<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>scores_f1<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>F1 em cada fold: [0.9636 0.9756 0.996  0.988  0.9796]
+F1 médio: 0.9805 ± 0.0110</code></pre>
+</div>
+</div>
+<p>E todas as métricas de uma vez com <code>cross_validate</code>, passando o dicionário <code>metricas</code>:</p>
+<div id="3d36c7c3" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cv_tree <span class="op">=</span> cross_validate(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    DecisionTreeClassifier(max_depth<span class="op">=</span><span class="dv">6</span>, class_weight<span class="op">=</span><span class="st">'balanced'</span>, random_state<span class="op">=</span><span class="dv">2025</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    X_train, y_train, cv<span class="op">=</span>skf, scoring<span class="op">=</span>metricas)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(cv_tree).<span class="bu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">score_time</th>
+<th data-quarto-table-cell-role="th">test_acuracia</th>
+<th data-quarto-table-cell-role="th">test_precisao</th>
+<th data-quarto-table-cell-role="th">test_recall</th>
+<th data-quarto-table-cell-role="th">test_f1</th>
+<th data-quarto-table-cell-role="th">test_auc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0.0060</td>
+<td>0.0054</td>
+<td>0.9936</td>
+<td>0.9597</td>
+<td>0.9675</td>
+<td>0.9636</td>
+<td>0.9832</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>0.0061</td>
+<td>0.0045</td>
+<td>0.9957</td>
+<td>0.9756</td>
+<td>0.9756</td>
+<td>0.9756</td>
+<td>0.9866</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>0.0059</td>
+<td>0.0044</td>
+<td>0.9993</td>
+<td>0.9919</td>
+<td>1.0000</td>
+<td>0.9960</td>
+<td>0.9996</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>0.0060</td>
+<td>0.0046</td>
+<td>0.9979</td>
+<td>0.9762</td>
+<td>1.0000</td>
+<td>0.9880</td>
+<td>1.0000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>0.0074</td>
+<td>0.0050</td>
+<td>0.9964</td>
+<td>0.9917</td>
+<td>0.9677</td>
+<td>0.9796</td>
+<td>0.9838</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="comparando-os-modelos-do-tutorial-8-com-validação-cruzada" class="level3">
+<h3 class="anchored" data-anchor-id="comparando-os-modelos-do-tutorial-8-com-validação-cruzada">Comparando os modelos do Tutorial 8 com validação cruzada</h3>
+<p>Vamos avaliar os três modelos do Tutorial 8 e incluir um <strong>modelo de referência</strong> (<em>baseline</em>): o <code>DummyClassifier</code>, que sempre prevê a classe mais frequente. Qualquer modelo útil precisa superar esse baseline.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Regressão Logística com <code>Pipeline</code>:</strong> a Regressão Logística do scikit-learn aplica regularização (hiperparâmetro <code>C</code>), cujo efeito depende da escala das features. Por isso vamos colocá-la em um <code>Pipeline</code> com <code>StandardScaler</code>, que, como vimos no tutorial de regressão, é ajustado apenas nos folds de treino em cada iteração.</p>
+</div>
+</div>
+<div id="b70002ac" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>modelos <span class="op">=</span> {</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Baseline'</span>: DummyClassifier(strategy<span class="op">=</span><span class="st">'most_frequent'</span>),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Regressão Logística'</span>: Pipeline([</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'scaler'</span>, StandardScaler()),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        (<span class="st">'logreg'</span>, LogisticRegression(solver<span class="op">=</span><span class="st">'liblinear'</span>, max_iter<span class="op">=</span><span class="dv">5000</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    ]),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Árvore de Decisão'</span>: DecisionTreeClassifier(max_depth<span class="op">=</span><span class="dv">6</span>, class_weight<span class="op">=</span><span class="st">'balanced'</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                                                random_state<span class="op">=</span><span class="dv">2025</span>),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Random Forest'</span>: RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">100</span>, class_weight<span class="op">=</span><span class="st">'balanced'</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                                            random_state<span class="op">=</span><span class="dv">42</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>resultados_cv <span class="op">=</span> []</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome, modelo <span class="kw">in</span> modelos.items():</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    cv_res <span class="op">=</span> cross_validate(modelo, X_train, y_train, cv<span class="op">=</span>skf, scoring<span class="op">=</span>metricas)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> fold <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        resultados_cv.append({</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Modelo'</span>: nome, <span class="st">'Fold'</span>: fold <span class="op">+</span> <span class="dv">1</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Acurácia'</span>: cv_res[<span class="st">'test_acuracia'</span>][fold],</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Precisão'</span>: cv_res[<span class="st">'test_precisao'</span>][fold],</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Recall'</span>: cv_res[<span class="st">'test_recall'</span>][fold],</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">'F1'</span>: cv_res[<span class="st">'test_f1'</span>][fold],</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">'AUC'</span>: cv_res[<span class="st">'test_auc'</span>][fold]</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>resultados_cv <span class="op">=</span> pd.DataFrame(resultados_cv)</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>resultados_cv.groupby(<span class="st">'Modelo'</span>, sort<span class="op">=</span><span class="va">False</span>).mean().drop(columns<span class="op">=</span><span class="st">'Fold'</span>).<span class="bu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Acurácia</th>
+<th data-quarto-table-cell-role="th">Precisão</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+<th data-quarto-table-cell-role="th">AUC</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Modelo</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Baseline</th>
+<td>0.9120</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.0000</td>
+<td>0.5000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Regressão Logística</th>
+<td>0.9599</td>
+<td>0.8968</td>
+<td>0.6152</td>
+<td>0.7273</td>
+<td>0.9751</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Árvore de Decisão</th>
+<td>0.9966</td>
+<td>0.9790</td>
+<td>0.9822</td>
+<td>0.9805</td>
+<td>0.9907</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Random Forest</th>
+<td>0.9977</td>
+<td>1.0000</td>
+<td>0.9741</td>
+<td>0.9868</td>
+<td>0.9999</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Repare no <strong>Baseline</strong>: sua acurácia é alta (cerca de 91%, exatamente a proporção de transações legítimas), mas precisão, recall e F1 são zero, e a AUC é 0.5 (igual a jogar uma moeda). Ele é a prova de que <strong>a acurácia sozinha não serve para avaliar um classificador com classes desbalanceadas</strong>.</p>
+<p>Repare também na <strong>Regressão Logística</strong>: sua acurácia (cerca de 96%) parece muito boa, mas o F1 fica bem abaixo dos modelos baseados em árvores, porque o recall é baixo (ela deixa passar uma boa parte das fraudes). A Regressão Logística separa as classes com uma fronteira <strong>linear</strong>, enquanto neste dataset a fraude depende de <strong>limiares e combinações</strong> entre as features (por exemplo, compras com valor muito acima da mediana <em>e</em> feitas online <em>e</em> sem PIN). Esse tipo de regra é exatamente o que as árvores de decisão aprendem.</p>
+<p>Vamos visualizar a distribuição de acurácia e F1 nos 5 folds:</p>
+<div id="a92b27cf" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>resultados_long <span class="op">=</span> resultados_cv.melt(id_vars<span class="op">=</span>[<span class="st">'Modelo'</span>, <span class="st">'Fold'</span>],</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                                     value_vars<span class="op">=</span>[<span class="st">'Acurácia'</span>, <span class="st">'F1'</span>],</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                     var_name<span class="op">=</span><span class="st">'Métrica'</span>, value_name<span class="op">=</span><span class="st">'Valor'</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.catplot(data<span class="op">=</span>resultados_long, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'Valor'</span>, col<span class="op">=</span><span class="st">'Métrica'</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                kind<span class="op">=</span><span class="st">'box'</span>, hue<span class="op">=</span><span class="st">'Modelo'</span>, palette<span class="op">=</span>colors <span class="op">+</span> [<span class="st">'grey'</span>], height<span class="op">=</span><span class="dv">4</span>, aspect<span class="op">=</span><span class="fl">1.2</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>g.set_xticklabels(rotation<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>g.figure.suptitle(<span class="st">'Validação cruzada estratificada (5 folds) - modelos do Tutorial 8'</span>, y<span class="op">=</span><span class="fl">1.04</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-16-output-1.png" width="911" height="447" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="parte-2---otimização-de-hiperparâmetros" class="level2">
+<h2 class="anchored" data-anchor-id="parte-2---otimização-de-hiperparâmetros">Parte 2 - Otimização de Hiperparâmetros</h2>
+<section id="principais-hiperparâmetros-dos-classificadores" class="level3">
+<h3 class="anchored" data-anchor-id="principais-hiperparâmetros-dos-classificadores">Principais hiperparâmetros dos classificadores</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modelo</th>
+<th>Hiperparâmetro</th>
+<th>O que controla</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Regressão Logística</td>
+<td><code>C</code></td>
+<td>Inverso da força da regularização (C pequeno = modelo mais simples)</td>
+</tr>
+<tr class="even">
+<td>Regressão Logística</td>
+<td><code>class_weight</code></td>
+<td>Peso dado a cada classe no treino</td>
+</tr>
+<tr class="odd">
+<td>Árvore de Decisão</td>
+<td><code>max_depth</code></td>
+<td>Profundidade máxima da árvore</td>
+</tr>
+<tr class="even">
+<td>Árvore de Decisão</td>
+<td><code>min_samples_leaf</code></td>
+<td>Número mínimo de observações em cada folha</td>
+</tr>
+<tr class="odd">
+<td>Árvore / Random Forest</td>
+<td><code>criterion</code></td>
+<td>Medida de impureza (<code>gini</code> ou <code>entropy</code>)</td>
+</tr>
+<tr class="even">
+<td>Random Forest</td>
+<td><code>n_estimators</code></td>
+<td>Número de árvores</td>
+</tr>
+<tr class="odd">
+<td>Random Forest</td>
+<td><code>max_features</code></td>
+<td>Número de features sorteadas em cada divisão</td>
+</tr>
+<tr class="even">
+<td>Todos</td>
+<td>limiar de decisão</td>
+<td>Probabilidade a partir da qual prevemos “fraude” (0.5 por padrão)</td>
+</tr>
+</tbody>
+</table>
+<p>O hiperparâmetro <code>class_weight='balanced'</code> merece destaque em problemas desbalanceados: ele faz o modelo dar mais peso aos erros na classe rara (fraude), o que costuma aumentar o recall em troca de alguma precisão.</p>
+</section>
+<section id="curva-de-validação-max_depth-da-árvore" class="level3">
+<h3 class="anchored" data-anchor-id="curva-de-validação-max_depth-da-árvore">Curva de validação: <code>max_depth</code> da árvore</h3>
+<p>No Tutorial 8 escolhemos <code>max_depth=6</code>. Será uma boa escolha? Vamos usar a <code>validation_curve</code> com o F1 como métrica.</p>
+<div id="32fe1a67" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>profundidades <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">21</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>train_scores, valid_scores <span class="op">=</span> validation_curve(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    DecisionTreeClassifier(class_weight<span class="op">=</span><span class="st">'balanced'</span>, random_state<span class="op">=</span><span class="dv">2025</span>), X_train, y_train,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    param_name<span class="op">=</span><span class="st">'max_depth'</span>, param_range<span class="op">=</span>profundidades,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>skf, scoring<span class="op">=</span><span class="st">'f1'</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>plt.plot(profundidades, train_scores.mean(axis<span class="op">=</span><span class="dv">1</span>), <span class="st">'o-'</span>, color<span class="op">=</span>colors[<span class="dv">1</span>], label<span class="op">=</span><span class="st">'Treino'</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>plt.plot(profundidades, valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>), <span class="st">'o-'</span>, color<span class="op">=</span>colors[<span class="dv">2</span>], label<span class="op">=</span><span class="st">'Validação (CV)'</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>plt.fill_between(profundidades,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                 valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">-</span> valid_scores.std(axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                 valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span> valid_scores.std(axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span>colors[<span class="dv">2</span>], alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="dv">6</span>, color<span class="op">=</span>colors[<span class="dv">0</span>], linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'max_depth do Tutorial 8'</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'max_depth'</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'F1'</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Curva de validação - Árvore de Decisão'</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-17-output-1.png" width="597" height="452" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="d81574c3" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>melhor_depth <span class="op">=</span> profundidades[valid_scores.mean(axis<span class="op">=</span><span class="dv">1</span>).argmax()]</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor max_depth pela curva de validação: </span><span class="sc">{</span>melhor_depth<span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhor max_depth pela curva de validação: 9</code></pre>
+</div>
+</div>
+<p>A leitura é parecida com a do tutorial de regressão: com árvores rasas (profundidade 1 a 3) o modelo sofre de <strong>underfitting</strong>. A partir de certa profundidade, a curva de treino chega a 1 e a de validação para de melhorar: o modelo passa a decorar o treino sem ganhar capacidade de generalização.</p>
+<p>Neste dataset a curva de validação <strong>estabiliza</strong> em vez de cair, porque os padrões de fraude são bem definidos e há pouco ruído para a árvore decorar. Note também que o <code>max_depth=6</code> do Tutorial 8 já estava perto do platô.</p>
+</section>
+<section id="grid-search-regressão-logística" class="level3">
+<h3 class="anchored" data-anchor-id="grid-search-regressão-logística">Grid Search: Regressão Logística</h3>
+<p>Para a Regressão Logística vamos otimizar <code>C</code> e <code>class_weight</code>. Como <code>C</code> varia em ordens de grandeza, usamos valores em escala logarítmica com <code>np.logspace</code>. Lembre que, dentro do <code>Pipeline</code>, o nome do hiperparâmetro recebe o prefixo do passo: <code>logreg__C</code>.</p>
+<div id="967702ed" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pipe_logreg <span class="op">=</span> Pipeline([</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scaler'</span>, StandardScaler()),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'logreg'</span>, LogisticRegression(solver<span class="op">=</span><span class="st">'liblinear'</span>, max_iter<span class="op">=</span><span class="dv">5000</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>param_grid_logreg <span class="op">=</span> {</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'logreg__C'</span>: np.logspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">6</span>),        <span class="co"># 0.001, 0.01, 0.1, 1, 10, 100</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'logreg__class_weight'</span>: [<span class="va">None</span>, <span class="st">'balanced'</span>]</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>grid_logreg <span class="op">=</span> GridSearchCV(pipe_logreg, param_grid<span class="op">=</span>param_grid_logreg,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                           cv<span class="op">=</span>skf, scoring<span class="op">=</span>metricas, refit<span class="op">=</span><span class="st">'f1'</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>grid_logreg.fit(X_train, y_train)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, grid_logreg.best_params_)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor F1 (CV): </span><span class="sc">{</span>grid_logreg<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'logreg__C': np.float64(10.0), 'logreg__class_weight': None}
+Melhor F1 (CV): 0.7488</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Busca com várias métricas:</strong> passamos o dicionário <code>metricas</code> em <code>scoring</code> e indicamos com <code>refit='f1'</code> qual métrica decide o melhor modelo. Assim o <code>cv_results_</code> guarda todas as métricas para cada combinação, e podemos analisar os trade-offs.</p>
+</div>
+</div>
+<p>Vamos ver como precisão, recall e F1 mudam com <code>C</code> para cada opção de <code>class_weight</code>:</p>
+<div id="67c656bb" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>res_logreg <span class="op">=</span> pd.DataFrame(grid_logreg.cv_results_)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Rótulos em texto a partir da coluna 'params' (assim o valor None aparece como 'None')</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>res_logreg[<span class="st">'class_weight'</span>] <span class="op">=</span> res_logreg[<span class="st">'params'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> p: <span class="bu">str</span>(p[<span class="st">'logreg__class_weight'</span>]))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">4</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>titulos <span class="op">=</span> {<span class="st">'precisao'</span>: <span class="st">'Precisão'</span>, <span class="st">'recall'</span>: <span class="st">'Recall'</span>, <span class="st">'f1'</span>: <span class="st">'F1'</span>}</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, met <span class="kw">in</span> <span class="bu">zip</span>(axes, titulos):</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(data<span class="op">=</span>res_logreg, x<span class="op">=</span><span class="st">'param_logreg__C'</span>, y<span class="op">=</span><span class="ss">f'mean_test_</span><span class="sc">{</span>met<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                 hue<span class="op">=</span><span class="st">'class_weight'</span>, marker<span class="op">=</span><span class="st">'o'</span>, palette<span class="op">=</span>colors[<span class="dv">0</span>:<span class="dv">2</span>], ax<span class="op">=</span>ax)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">'log'</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'C'</span>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Valor médio (CV)'</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    ax.set_title(titulos[met])</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-20-output-1.png" width="1237" height="371" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Este gráfico mostra claramente o <strong>trade-off entre precisão e recall</strong>: <code>class_weight='balanced'</code> aumenta muito o recall (encontra mais fraudes), mas reduz a precisão (mais alarmes falsos). O F1 nos ajuda a escolher o melhor equilíbrio entre os dois.</p>
+<p>Observe também que, a partir de <code>C = 1</code>, as curvas ficam praticamente planas: diminuir a regularização além desse ponto já não muda o modelo. Mesmo otimizada, a Regressão Logística continua limitada pela sua fronteira linear, e a otimização de hiperparâmetros não resolve uma limitação do tipo de modelo.</p>
+<div id="bed9687a" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>logreg_otimizada <span class="op">=</span> grid_logreg.best_estimator_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="grid-search-árvore-de-decisão" class="level3">
+<h3 class="anchored" data-anchor-id="grid-search-árvore-de-decisão">Grid Search: Árvore de Decisão</h3>
+<p>Agora uma grade com três hiperparâmetros da árvore:</p>
+<div id="8a797ba9" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>param_grid_tree <span class="op">=</span> {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_depth'</span>: [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>, <span class="dv">12</span>, <span class="va">None</span>],</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min_samples_leaf'</span>: [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">50</span>],</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'class_weight'</span>: [<span class="va">None</span>, <span class="st">'balanced'</span>]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>n_comb <span class="op">=</span> <span class="dv">7</span> <span class="op">*</span> <span class="dv">4</span> <span class="op">*</span> <span class="dv">2</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Combinações: </span><span class="sc">{</span>n_comb<span class="sc">}</span><span class="ss"> | Modelos treinados: </span><span class="sc">{</span>n_comb <span class="op">*</span> <span class="dv">5</span><span class="sc">}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Combinações: 56 | Modelos treinados: 280</code></pre>
+</div>
+</div>
+<div id="d04c1c15" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>grid_tree <span class="op">=</span> GridSearchCV(DecisionTreeClassifier(random_state<span class="op">=</span><span class="dv">2025</span>),</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>                         param_grid<span class="op">=</span>param_grid_tree,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                         cv<span class="op">=</span>skf, scoring<span class="op">=</span>metricas, refit<span class="op">=</span><span class="st">'f1'</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>grid_tree.fit(X_train, y_train)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, grid_tree.best_params_)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor F1 (CV): </span><span class="sc">{</span>grid_tree<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'class_weight': 'balanced', 'max_depth': 10, 'min_samples_leaf': 1}
+Melhor F1 (CV): 0.9861</code></pre>
+</div>
+</div>
+<p>As 10 melhores combinações, com as demais métricas:</p>
+<div id="fa28f464" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>res_tree <span class="op">=</span> pd.DataFrame(grid_tree.cv_results_)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>res_tree[[<span class="st">'param_max_depth'</span>, <span class="st">'param_min_samples_leaf'</span>, <span class="st">'param_class_weight'</span>,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">'mean_test_f1'</span>, <span class="st">'std_test_f1'</span>, <span class="st">'mean_test_precisao'</span>, <span class="st">'mean_test_recall'</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>          <span class="st">'rank_test_f1'</span>]] <span class="op">\</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'rank_test_f1'</span>).head(<span class="dv">10</span>).<span class="bu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">param_max_depth</th>
+<th data-quarto-table-cell-role="th">param_min_samples_leaf</th>
+<th data-quarto-table-cell-role="th">param_class_weight</th>
+<th data-quarto-table-cell-role="th">mean_test_f1</th>
+<th data-quarto-table-cell-role="th">std_test_f1</th>
+<th data-quarto-table-cell-role="th">mean_test_precisao</th>
+<th data-quarto-table-cell-role="th">mean_test_recall</th>
+<th data-quarto-table-cell-role="th">rank_test_f1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">44</th>
+<td>10</td>
+<td>1</td>
+<td>balanced</td>
+<td>0.9861</td>
+<td>0.0084</td>
+<td>0.9902</td>
+<td>0.9822</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">52</th>
+<td>None</td>
+<td>1</td>
+<td>balanced</td>
+<td>0.9861</td>
+<td>0.0084</td>
+<td>0.9902</td>
+<td>0.9822</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">48</th>
+<td>12</td>
+<td>1</td>
+<td>balanced</td>
+<td>0.9861</td>
+<td>0.0084</td>
+<td>0.9902</td>
+<td>0.9822</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">40</th>
+<td>8</td>
+<td>1</td>
+<td>balanced</td>
+<td>0.9844</td>
+<td>0.0095</td>
+<td>0.9902</td>
+<td>0.9789</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>12</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.9812</td>
+<td>0.0075</td>
+<td>0.9870</td>
+<td>0.9757</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">24</th>
+<td>None</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.9812</td>
+<td>0.0075</td>
+<td>0.9870</td>
+<td>0.9757</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>8</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.9812</td>
+<td>0.0075</td>
+<td>0.9870</td>
+<td>0.9757</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>6</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.9812</td>
+<td>0.0075</td>
+<td>0.9870</td>
+<td>0.9757</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>10</td>
+<td>1</td>
+<td>NaN</td>
+<td>0.9812</td>
+<td>0.0075</td>
+<td>0.9870</td>
+<td>0.9757</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">36</th>
+<td>6</td>
+<td>1</td>
+<td>balanced</td>
+<td>0.9805</td>
+<td>0.0110</td>
+<td>0.9790</td>
+<td>0.9822</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Empates:</strong> repare que várias combinações dividem o primeiro lugar (<code>rank_test_f1 = 1</code>), pois produzem árvores com o mesmo desempenho nos folds. Nesse caso o <code>GridSearchCV</code> fica com a primeira combinação empatada na ordem da grade. Entre modelos empatados, costuma ser preferível o <strong>mais simples</strong> (árvore mais rasa), que é mais fácil de interpretar.</p>
+</div>
+</div>
+<p>Heatmap do F1 para <code>max_depth</code> x <code>min_samples_leaf</code>, fixando o melhor <code>class_weight</code>:</p>
+<div id="4705ec57" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>melhor_cw <span class="op">=</span> <span class="bu">str</span>(grid_tree.best_params_[<span class="st">'class_weight'</span>])</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Rótulos em texto a partir da coluna 'params' (assim o valor None aparece como 'None')</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>res_tree[<span class="st">'cw'</span>] <span class="op">=</span> res_tree[<span class="st">'params'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> p: <span class="bu">str</span>(p[<span class="st">'class_weight'</span>]))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>res_tree[<span class="st">'depth'</span>] <span class="op">=</span> res_tree[<span class="st">'params'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> p: <span class="bu">str</span>(p[<span class="st">'max_depth'</span>]))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>tabela_tree <span class="op">=</span> res_tree[res_tree[<span class="st">'cw'</span>] <span class="op">==</span> melhor_cw].pivot_table(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    index<span class="op">=</span><span class="st">'param_min_samples_leaf'</span>, columns<span class="op">=</span><span class="st">'depth'</span>, values<span class="op">=</span><span class="st">'mean_test_f1'</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantém as colunas na mesma ordem da grade</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>tabela_tree <span class="op">=</span> tabela_tree[[<span class="bu">str</span>(d) <span class="cf">for</span> d <span class="kw">in</span> param_grid_tree[<span class="st">'max_depth'</span>]]]</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>sns.heatmap(tabela_tree, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'.3f'</span>, cmap<span class="op">=</span><span class="st">'Reds'</span>)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'max_depth'</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'min_samples_leaf'</span>)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="ss">f'F1 médio (CV) - Árvore de Decisão (class_weight = </span><span class="sc">{</span>melhor_cw<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-25-output-1.png" width="560" height="452" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="d681b6ca" class="cell" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tree_otimizada <span class="op">=</span> grid_tree.best_estimator_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>O heatmap mostra que <code>min_samples_leaf</code> grande prejudica bastante o modelo: exigir muitas observações em cada folha impede a árvore de isolar os grupos menores de fraudes.</p>
+</section>
+<section id="randomized-search-random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="randomized-search-random-forest">Randomized Search: Random Forest</h3>
+<p>O Random Forest é o modelo mais caro de treinar, então vamos usar o <code>RandomizedSearchCV</code>. Como o dataset tem 10.000 linhas, a busca é rápida o suficiente para sortearmos 30 combinações.</p>
+<div id="4b1a17d7" class="cell" data-execution_count="26">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>param_dist_rf <span class="op">=</span> {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'n_estimators'</span>: randint(<span class="dv">50</span>, <span class="dv">300</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_depth'</span>: [<span class="va">None</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>],</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'min_samples_leaf'</span>: randint(<span class="dv">1</span>, <span class="dv">10</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'max_features'</span>: [<span class="st">'sqrt'</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>],</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'criterion'</span>: [<span class="st">'gini'</span>, <span class="st">'entropy'</span>],</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'class_weight'</span>: [<span class="va">None</span>, <span class="st">'balanced'</span>]</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>random_rf <span class="op">=</span> RandomizedSearchCV(</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    RandomForestClassifier(random_state<span class="op">=</span><span class="dv">42</span>),</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    param_distributions<span class="op">=</span>param_dist_rf,</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    n_iter<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    cv<span class="op">=</span>skf, scoring<span class="op">=</span>metricas, refit<span class="op">=</span><span class="st">'f1'</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">2025</span>, n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>random_rf.fit(X_train, y_train)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Melhores hiperparâmetros:'</span>, random_rf.best_params_)</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Melhor F1 (CV): </span><span class="sc">{</span>random_rf<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhores hiperparâmetros: {'class_weight': 'balanced', 'criterion': 'entropy', 'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 1, 'n_estimators': 167}
+Melhor F1 (CV): 0.9910</code></pre>
+</div>
+</div>
+<div id="428b7d0e" class="cell" data-execution_count="27">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>res_rf <span class="op">=</span> pd.DataFrame(random_rf.cv_results_)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>res_rf[[<span class="st">'param_n_estimators'</span>, <span class="st">'param_max_depth'</span>, <span class="st">'param_min_samples_leaf'</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">'param_max_features'</span>, <span class="st">'param_criterion'</span>, <span class="st">'param_class_weight'</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mean_test_f1'</span>, <span class="st">'std_test_f1'</span>, <span class="st">'rank_test_f1'</span>]] <span class="op">\</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'rank_test_f1'</span>).head(<span class="dv">10</span>).<span class="bu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">param_n_estimators</th>
+<th data-quarto-table-cell-role="th">param_max_depth</th>
+<th data-quarto-table-cell-role="th">param_min_samples_leaf</th>
+<th data-quarto-table-cell-role="th">param_max_features</th>
+<th data-quarto-table-cell-role="th">param_criterion</th>
+<th data-quarto-table-cell-role="th">param_class_weight</th>
+<th data-quarto-table-cell-role="th">mean_test_f1</th>
+<th data-quarto-table-cell-role="th">std_test_f1</th>
+<th data-quarto-table-cell-role="th">rank_test_f1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>167</td>
+<td>None</td>
+<td>1</td>
+<td>sqrt</td>
+<td>entropy</td>
+<td>balanced</td>
+<td>0.9910</td>
+<td>0.0066</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>123</td>
+<td>None</td>
+<td>2</td>
+<td>sqrt</td>
+<td>entropy</td>
+<td>balanced</td>
+<td>0.9901</td>
+<td>0.0081</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">23</th>
+<td>121</td>
+<td>20</td>
+<td>3</td>
+<td>sqrt</td>
+<td>entropy</td>
+<td>balanced</td>
+<td>0.9893</td>
+<td>0.0077</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>111</td>
+<td>5</td>
+<td>3</td>
+<td>sqrt</td>
+<td>gini</td>
+<td>balanced</td>
+<td>0.9877</td>
+<td>0.0091</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">21</th>
+<td>129</td>
+<td>10</td>
+<td>1</td>
+<td>0.5</td>
+<td>gini</td>
+<td>NaN</td>
+<td>0.9868</td>
+<td>0.0088</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">22</th>
+<td>90</td>
+<td>10</td>
+<td>6</td>
+<td>sqrt</td>
+<td>entropy</td>
+<td>balanced</td>
+<td>0.9862</td>
+<td>0.0119</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>169</td>
+<td>5</td>
+<td>1</td>
+<td>0.5</td>
+<td>gini</td>
+<td>balanced</td>
+<td>0.9861</td>
+<td>0.0099</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>291</td>
+<td>20</td>
+<td>1</td>
+<td>1.0</td>
+<td>gini</td>
+<td>NaN</td>
+<td>0.9844</td>
+<td>0.0061</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">17</th>
+<td>296</td>
+<td>None</td>
+<td>2</td>
+<td>0.5</td>
+<td>gini</td>
+<td>NaN</td>
+<td>0.9844</td>
+<td>0.0096</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>290</td>
+<td>10</td>
+<td>3</td>
+<td>0.5</td>
+<td>gini</td>
+<td>NaN</td>
+<td>0.9835</td>
+<td>0.0105</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Um gráfico interessante para a busca aleatória é comparar precisão e recall de todas as combinações testadas, colorindo pelo F1:</p>
+<div id="328d2a8e" class="cell" data-execution_count="28">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>pontos <span class="op">=</span> plt.scatter(res_rf[<span class="st">'mean_test_recall'</span>], res_rf[<span class="st">'mean_test_precisao'</span>],</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                     c<span class="op">=</span>res_rf[<span class="st">'mean_test_f1'</span>], cmap<span class="op">=</span><span class="st">'Reds'</span>, s<span class="op">=</span><span class="dv">80</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>plt.colorbar(pontos, label<span class="op">=</span><span class="st">'F1 médio (CV)'</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>melhor <span class="op">=</span> res_rf.loc[res_rf[<span class="st">'rank_test_f1'</span>] <span class="op">==</span> <span class="dv">1</span>].iloc[<span class="dv">0</span>]</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>plt.scatter(melhor[<span class="st">'mean_test_recall'</span>], melhor[<span class="st">'mean_test_precisao'</span>],</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>            marker<span class="op">=</span><span class="st">'*'</span>, s<span class="op">=</span><span class="dv">400</span>, color<span class="op">=</span>colors[<span class="dv">2</span>], label<span class="op">=</span><span class="st">'Melhor combinação'</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Recall médio (CV)'</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Precisão média (CV)'</span>)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Randomized Search - Random Forest'</span>)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-29-output-1.png" width="595" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="ee40d8b5" class="cell" data-execution_count="29">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>rf_otimizado <span class="op">=</span> random_rf.best_estimator_</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="otimizando-o-limiar-de-decisão" class="level3">
+<h3 class="anchored" data-anchor-id="otimizando-o-limiar-de-decisão">Otimizando o limiar de decisão</h3>
+<p>Por padrão, <code>predict()</code> classifica uma transação como fraude quando a probabilidade prevista é maior que <strong>0.5</strong>. Mas esse limiar é arbitrário: ele também é um hiperparâmetro e pode ser otimizado.</p>
+<p>Primeiro vamos entender o efeito do limiar. Com <code>cross_val_predict</code> obtemos as probabilidades de cada observação quando ela estava no fold de validação (ou seja, previsões “honestas”, fora da amostra de treino). Depois calculamos precisão, recall e F1 para cada limiar possível.</p>
+<div id="6c095423" class="cell" data-execution_count="30">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>proba_cv <span class="op">=</span> cross_val_predict(logreg_otimizada, X_train, y_train, cv<span class="op">=</span>skf,</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                             method<span class="op">=</span><span class="st">'predict_proba'</span>)[:, <span class="dv">1</span>]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>precisao, recall, limiares <span class="op">=</span> precision_recall_curve(y_train, proba_cv)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> precisao <span class="op">*</span> recall <span class="op">/</span> (precisao <span class="op">+</span> recall <span class="op">+</span> <span class="fl">1e-12</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>plt.plot(limiares, precisao[:<span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span>colors[<span class="dv">0</span>], label<span class="op">=</span><span class="st">'Precisão'</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>plt.plot(limiares, recall[:<span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span>colors[<span class="dv">1</span>], label<span class="op">=</span><span class="st">'Recall'</span>)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>plt.plot(limiares, f1[:<span class="op">-</span><span class="dv">1</span>], color<span class="op">=</span>colors[<span class="dv">2</span>], lw<span class="op">=</span><span class="dv">3</span>, label<span class="op">=</span><span class="st">'F1'</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'grey'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Limiar padrão (0.5)'</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Limiar de decisão'</span>)</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Valor'</span>)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Efeito do limiar - Regressão Logística otimizada'</span>)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-31-output-1.png" width="589" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Quanto <strong>menor</strong> o limiar, mais transações são marcadas como fraude: o recall sobe e a precisão cai. O <code>TunedThresholdClassifierCV</code> automatiza a escolha do limiar que maximiza uma métrica, usando validação cruzada internamente:</p>
+<div id="1434414d" class="cell" data-execution_count="31">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>logreg_limiar <span class="op">=</span> TunedThresholdClassifierCV(logreg_otimizada, scoring<span class="op">=</span><span class="st">'f1'</span>, cv<span class="op">=</span>skf)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>logreg_limiar.fit(X_train, y_train)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Limiar ótimo: </span><span class="sc">{</span>logreg_limiar<span class="sc">.</span>best_threshold_<span class="sc">:.3f}</span><span class="ss">'</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'F1 com o limiar ótimo (CV): </span><span class="sc">{</span>logreg_limiar<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Limiar ótimo: 0.343
+F1 com o limiar ótimo (CV): 0.8043</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A escolha da métrica para otimizar o limiar é uma decisão de negócio. Se deixar passar uma fraude for muito mais caro do que um alarme falso, faz sentido otimizar o recall com uma restrição mínima de precisão, ou usar uma métrica que pondere os custos de cada tipo de erro.</p>
+</div>
+</div>
+</section>
+<section id="validação-cruzada-aninhada" class="level3">
+<h3 class="anchored" data-anchor-id="validação-cruzada-aninhada">Validação cruzada aninhada</h3>
+<p>Como vimos na regressão, o <code>best_score_</code> é levemente otimista, pois é o máximo entre várias combinações testadas. A CV aninhada estima o desempenho do <strong>processo completo</strong> (busca + treino). Vamos aplicá-la à Regressão Logística, que é rápida de treinar:</p>
+<div id="89621af3" class="cell" data-execution_count="32">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>cv_interno <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>cv_externo <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">5</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>busca_logreg <span class="op">=</span> GridSearchCV(pipe_logreg, param_grid<span class="op">=</span>param_grid_logreg,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                            cv<span class="op">=</span>cv_interno, scoring<span class="op">=</span><span class="st">'f1'</span>, n_jobs<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>scores_aninhados <span class="op">=</span> cross_val_score(busca_logreg, X_train, y_train,</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>                                   cv<span class="op">=</span>cv_externo, scoring<span class="op">=</span><span class="st">'f1'</span>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'F1 em cada fold externo:'</span>, np.<span class="bu">round</span>(scores_aninhados, <span class="dv">4</span>))</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'F1 da CV aninhada      : </span><span class="sc">{</span>scores_aninhados<span class="sc">.</span>mean()<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>scores_aninhados<span class="sc">.</span>std()<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'best_score_ (CV simples): </span><span class="sc">{</span>grid_logreg<span class="sc">.</span>best_score_<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>F1 em cada fold externo: [0.713  0.7273 0.7798 0.8111 0.7628]
+F1 da CV aninhada      : 0.7588 ± 0.0355
+best_score_ (CV simples): 0.7488</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="parte-3---avaliação-final-no-conjunto-de-teste" class="level2">
+<h2 class="anchored" data-anchor-id="parte-3---avaliação-final-no-conjunto-de-teste">Parte 3 - Avaliação final no conjunto de teste</h2>
+<section id="modelos-finais" class="level3">
+<h3 class="anchored" data-anchor-id="modelos-finais">Modelos finais</h3>
+<p>Como as buscas foram feitas com todo o conjunto de treino, os modelos otimizados já estão prontos: por padrão (<code>refit=True</code>), o <code>GridSearchCV</code> e o <code>RandomizedSearchCV</code> retreinam o melhor modelo com todo o treino ao final da busca, e o <code>TunedThresholdClassifierCV</code> faz o mesmo com o limiar escolhido.</p>
+<p>Os modelos padrão (do Tutorial 8) só foram usados dentro da validação cruzada, então precisamos treiná-los com todo o treino. A função <code>clone</code> cria uma cópia “não treinada” de cada modelo, com os mesmos hiperparâmetros.</p>
+<div id="dfeb2bdc" class="cell" data-execution_count="33">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>padrao <span class="op">=</span> {nome: clone(m).fit(X_train, y_train)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> nome, m <span class="kw">in</span> modelos.items() <span class="cf">if</span> nome <span class="op">!=</span> <span class="st">'Baseline'</span>}</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>otimizados <span class="op">=</span> {</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Regressão Logística'</span>: logreg_otimizada,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Árvore de Decisão'</span>: tree_otimizada,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Random Forest'</span>: rf_otimizado,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Regressão Logística (limiar)'</span>: logreg_limiar</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="indicadores" class="level3">
+<h3 class="anchored" data-anchor-id="indicadores">Indicadores</h3>
+<p>Vamos criar uma função que calcula as métricas no conjunto de teste, no mesmo espírito do dataframe <code>resultados_df</code> do Tutorial 8:</p>
+<div id="149e54ee" class="cell" data-execution_count="34">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> avaliar(modelo, nome, versao):</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> modelo.predict(X_test)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    y_proba <span class="op">=</span> modelo.predict_proba(X_test)[:, <span class="dv">1</span>]</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">'Modelo'</span>: nome,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Versão'</span>: versao,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Acurácia'</span>: accuracy_score(y_test, y_pred),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Precisão'</span>: precision_score(y_test, y_pred),</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">'Recall'</span>: recall_score(y_test, y_pred),</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">'F1'</span>: f1_score(y_test, y_pred),</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">'AUC'</span>: roc_auc_score(y_test, y_proba)}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="900744c6" class="cell" data-execution_count="35">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>linhas <span class="op">=</span> []</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome, m <span class="kw">in</span> padrao.items():</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    linhas.append(avaliar(m, nome, <span class="st">'Padrão'</span>))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> nome, m <span class="kw">in</span> otimizados.items():</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    linhas.append(avaliar(m, nome, <span class="st">'Otimizado'</span>))</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>resultados_df <span class="op">=</span> pd.DataFrame(linhas)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>resultados_df.<span class="bu">round</span>(<span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Modelo</th>
+<th data-quarto-table-cell-role="th">Versão</th>
+<th data-quarto-table-cell-role="th">Acurácia</th>
+<th data-quarto-table-cell-role="th">Precisão</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+<th data-quarto-table-cell-role="th">AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Regressão Logística</td>
+<td>Padrão</td>
+<td>0.9590</td>
+<td>0.8579</td>
+<td>0.6402</td>
+<td>0.7332</td>
+<td>0.9747</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Árvore de Decisão</td>
+<td>Padrão</td>
+<td>0.9970</td>
+<td>0.9705</td>
+<td>0.9962</td>
+<td>0.9832</td>
+<td>0.9975</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Random Forest</td>
+<td>Padrão</td>
+<td>0.9983</td>
+<td>1.0000</td>
+<td>0.9811</td>
+<td>0.9904</td>
+<td>1.0000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Regressão Logística</td>
+<td>Otimizado</td>
+<td>0.9610</td>
+<td>0.8551</td>
+<td>0.6705</td>
+<td>0.7516</td>
+<td>0.9748</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Árvore de Decisão</td>
+<td>Otimizado</td>
+<td>0.9983</td>
+<td>0.9850</td>
+<td>0.9962</td>
+<td>0.9906</td>
+<td>0.9974</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>Random Forest</td>
+<td>Otimizado</td>
+<td>0.9993</td>
+<td>1.0000</td>
+<td>0.9924</td>
+<td>0.9962</td>
+<td>1.0000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>Regressão Logística (limiar)</td>
+<td>Otimizado</td>
+<td>0.9630</td>
+<td>0.8000</td>
+<td>0.7727</td>
+<td>0.7861</td>
+<td>0.9748</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Comparação visual do F1 e do recall no teste:</p>
+<div id="442a601a" class="cell" data-execution_count="36">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>resultados_long <span class="op">=</span> resultados_df.melt(id_vars<span class="op">=</span>[<span class="st">'Modelo'</span>, <span class="st">'Versão'</span>],</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                                     value_vars<span class="op">=</span>[<span class="st">'Precisão'</span>, <span class="st">'Recall'</span>, <span class="st">'F1'</span>],</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                                     var_name<span class="op">=</span><span class="st">'Métrica'</span>, value_name<span class="op">=</span><span class="st">'Valor'</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.catplot(data<span class="op">=</span>resultados_long, x<span class="op">=</span><span class="st">'Modelo'</span>, y<span class="op">=</span><span class="st">'Valor'</span>, hue<span class="op">=</span><span class="st">'Versão'</span>, col<span class="op">=</span><span class="st">'Métrica'</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                kind<span class="op">=</span><span class="st">'bar'</span>, palette<span class="op">=</span>colors[<span class="dv">1</span>:<span class="dv">3</span>], height<span class="op">=</span><span class="dv">4</span>, aspect<span class="op">=</span><span class="fl">1.1</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>g.set_xticklabels(rotation<span class="op">=</span><span class="dv">30</span>, ha<span class="op">=</span><span class="st">'right'</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>g.figure.suptitle(<span class="st">'Modelos padrão vs. otimizados no conjunto de teste'</span>, y<span class="op">=</span><span class="fl">1.04</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-37-output-1.png" width="1405" height="493" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="matrizes-de-confusão" class="level3">
+<h3 class="anchored" data-anchor-id="matrizes-de-confusão">Matrizes de confusão</h3>
+<p>As métricas resumem a matriz de confusão. Vamos compará-la para os modelos otimizados:</p>
+<div id="fa39a36e" class="cell" data-execution_count="37">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">4</span>))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (nome, m) <span class="kw">in</span> <span class="bu">zip</span>(axes, otimizados.items()):</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    cm <span class="op">=</span> confusion_matrix(y_test, m.predict(X_test))</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    sns.heatmap(cm, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'d'</span>, cmap<span class="op">=</span><span class="st">'Reds'</span>, cbar<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>                xticklabels<span class="op">=</span>[<span class="st">'Classe 0'</span>, <span class="st">'Classe 1'</span>],</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>                yticklabels<span class="op">=</span>[<span class="st">'Classe 0'</span>, <span class="st">'Classe 1'</span>])</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    ax.set_title(nome, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Rótulo Previsto'</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Rótulo Verdadeiro'</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-38-output-1.png" width="1716" height="373" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Compare a Regressão Logística com o limiar padrão e com o limiar otimizado: o modelo é o mesmo, apenas a regra de decisão mudou. Com o limiar menor, o modelo encontra mais fraudes (menos falsos negativos) em troca de mais alarmes falsos (mais falsos positivos). Para a Regressão Logística, ajustar o limiar trouxe um ganho de F1 maior do que ajustar <code>C</code> e <code>class_weight</code>.</p>
+</section>
+<section id="curvas-roc" class="level3">
+<h3 class="anchored" data-anchor-id="curvas-roc">Curvas ROC</h3>
+<div id="9c03e86e" class="cell" data-execution_count="38">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> cor, (nome, m) <span class="kw">in</span> <span class="bu">zip</span>(colors, <span class="bu">list</span>(otimizados.items())[:<span class="dv">3</span>]):</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    y_proba <span class="op">=</span> m.predict_proba(X_test)[:, <span class="dv">1</span>]</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    fpr, tpr, _ <span class="op">=</span> roc_curve(y_test, y_proba)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    auc <span class="op">=</span> roc_auc_score(y_test, y_proba)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    plt.plot(fpr, tpr, color<span class="op">=</span>cor, lw<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>nome<span class="sc">}</span><span class="ss"> (AUC = </span><span class="sc">{</span>auc<span class="sc">:.4f}</span><span class="ss">)'</span>)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>plt.plot([<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'grey'</span>, lw<span class="op">=</span><span class="dv">2</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'Classificador Aleatório'</span>)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>plt.xlim([<span class="fl">0.0</span>, <span class="fl">1.0</span>])</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>plt.ylim([<span class="fl">0.0</span>, <span class="fl">1.05</span>])</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Taxa de Falsos Positivos (FPR)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Taxa de Verdadeiros Positivos (TPR)'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Curvas ROC - modelos otimizados'</span>, fontsize<span class="op">=</span><span class="dv">16</span>)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">'lower right'</span>)</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pyTutorial10_files/figure-html/cell-39-output-1.png" width="759" height="566" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A Regressão Logística com limiar otimizado não aparece separada no gráfico porque a curva ROC não depende do limiar: ela já percorre <strong>todos</strong> os limiares possíveis. Por isso a AUC dos dois modelos de Regressão Logística é a mesma na tabela.</p>
+</section>
+<section id="relatório-do-melhor-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="relatório-do-melhor-modelo">Relatório do melhor modelo</h3>
+<p>Por fim, o <code>classification_report</code> do modelo com maior F1 no teste:</p>
+<div id="45cdc4b5" class="cell" data-execution_count="39">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>melhor <span class="op">=</span> resultados_df.sort_values(<span class="st">'F1'</span>, ascending<span class="op">=</span><span class="va">False</span>).iloc[<span class="dv">0</span>]</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>todos <span class="op">=</span> {(<span class="st">'Padrão'</span>, k): v <span class="cf">for</span> k, v <span class="kw">in</span> padrao.items()} <span class="op">|</span> <span class="op">\</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>        {(<span class="st">'Otimizado'</span>, k): v <span class="cf">for</span> k, v <span class="kw">in</span> otimizados.items()}</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>modelo_final <span class="op">=</span> todos[(melhor[<span class="st">'Versão'</span>], melhor[<span class="st">'Modelo'</span>])]</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Melhor modelo: </span><span class="sc">{</span>melhor[<span class="st">'Modelo'</span>]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>melhor[<span class="st">'Versão'</span>]<span class="sc">}</span><span class="ss">)</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, modelo_final.predict(X_test),</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                            target_names<span class="op">=</span>[<span class="st">'Não fraude'</span>, <span class="st">'Fraude'</span>], digits<span class="op">=</span><span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Melhor modelo: Random Forest (Otimizado)
+
+              precision    recall  f1-score   support
+
+  Não fraude     0.9993    1.0000    0.9996      2736
+      Fraude     1.0000    0.9924    0.9962       264
+
+    accuracy                         0.9993      3000
+   macro avg     0.9996    0.9962    0.9979      3000
+weighted avg     0.9993    0.9993    0.9993      3000
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<ul>
+<li>Em classificação com <strong>classes desbalanceadas</strong>, a acurácia engana: um baseline que nunca prevê fraude já tem acurácia alta. Use <strong>precisão, recall, F1 e AUC</strong>, e compare sempre com um <code>DummyClassifier</code>.</li>
+<li>Use o <strong><code>StratifiedKFold</code></strong>, que mantém a proporção das classes em todos os folds. Use também <code>stratify=y</code> no <code>train_test_split</code>.</li>
+<li><code>cross_validate</code>, <code>GridSearchCV</code> e <code>RandomizedSearchCV</code> aceitam <strong>várias métricas</strong>; o argumento <code>refit</code> indica qual delas escolhe o melhor modelo.</li>
+<li><code>class_weight='balanced'</code> é um hiperparâmetro importante em dados desbalanceados e desloca o equilíbrio entre precisão e recall.</li>
+<li>O <strong>limiar de decisão</strong> também é um hiperparâmetro; o <code>TunedThresholdClassifierCV</code> o otimiza por validação cruzada.</li>
+<li>A otimização de hiperparâmetros melhora um modelo, mas não corrige a escolha de um modelo inadequado: a Regressão Logística otimizada continua bem abaixo das árvores, cujo formato combina com a estrutura do problema.</li>
+<li>O <strong>conjunto de teste</strong> só é usado na avaliação final.</li>
+</ul>
+</section>
+<section id="exercícios" class="level2">
+<h2 class="anchored" data-anchor-id="exercícios">Exercícios</h2>
+<ol type="1">
+<li>Refaça o Grid Search da árvore de decisão usando <code>refit='recall'</code> em vez de <code>refit='f1'</code>. Quais hiperparâmetros são escolhidos? O que acontece com a precisão no teste?</li>
+<li>Refaça a validação cruzada da Parte 1 com <code>StratifiedKFold(n_splits=10)</code>. O desvio padrão das métricas entre os folds aumenta ou diminui? Por quê?</li>
+<li>Otimize o limiar de decisão do Random Forest otimizado com <code>TunedThresholdClassifierCV</code>. O ganho é maior ou menor do que na Regressão Logística?</li>
+<li>Inclua o hiperparâmetro <code>criterion</code> (<code>'gini'</code> e <code>'entropy'</code>) no Grid Search da árvore de decisão. Quantos modelos passam a ser treinados?</li>
+<li>Use <code>scoring='balanced_accuracy'</code> na validação cruzada dos modelos da Parte 1. Como o Baseline se sai com essa métrica? Por quê?</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
