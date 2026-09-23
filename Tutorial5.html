@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tutorial 6 - Métodos de Classificação simplificados – EPS-UFSC</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-6033a600180109c3731f6a886c29932c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">EPS-UFSC</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-python" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais Python</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-python">    
+        <li>
+    <a class="dropdown-item" href="./pyTutorialPython.html">
+ <span class="dropdown-text">Tutorial de Instalação do Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial3.html">
+ <span class="dropdown-text">Tutorial 3 - Matplotlib</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Seaborn e GeoPandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5.html">
+ <span class="dropdown-text">Tutorial 5 - Quarto Dashboards em Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5b.html">
+ <span class="dropdown-text">Tutorial 5b - Mapas Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial5c.html">
+ <span class="dropdown-text">Tutorial 5c - Dashboards Interativos</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial6.html">
+ <span class="dropdown-text">Tutorial 6 - Métodos não supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial7.html">
+ <span class="dropdown-text">Tutorial 7 - Métodos de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial8.html">
+ <span class="dropdown-text">Tutorial 8 - Métodos de Classificação</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial9.html">
+ <span class="dropdown-text">Tutorial 9 - Métodos Avançados de Regressão</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pyTutorial10.html">
+ <span class="dropdown-text">Tutorial 10 - Métodos Avançados em Classificação</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutoriais-r" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutoriais R</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutoriais-r">    
+        <li>
+    <a class="dropdown-item" href="./Tutorial0.html">
+ <span class="dropdown-text">Tutorial 0 - Conhecendo o R</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial1.html">
+ <span class="dropdown-text">Tutorial 1 - Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial2.html">
+ <span class="dropdown-text">Tutorial 2 - Ggplot2 e Tidyverse</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial_av_ggplot.html">
+ <span class="dropdown-text">Tutorial 3a - Ggplot Avançado</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial3b.html">
+ <span class="dropdown-text">Tutorial 3b - Quarto Dashboards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial4.html">
+ <span class="dropdown-text">Tutorial 4 - Métodos Não Supervisionados</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./Tutorial5regtidymodels.html">
+ <span class="dropdown-text">Tutorial 5 - Métodos de Regressão e Classificação em R</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#carregando-os-pacotes" id="toc-carregando-os-pacotes" class="nav-link active" data-scroll-target="#carregando-os-pacotes">Carregando os pacotes</a></li>
+  <li><a href="#regressão-logística" id="toc-regressão-logística" class="nav-link" data-scroll-target="#regressão-logística">Regressão Logística</a>
+  <ul class="collapse">
+  <li><a href="#carregando-o-dataset" id="toc-carregando-o-dataset" class="nav-link" data-scroll-target="#carregando-o-dataset">Carregando o dataset</a></li>
+  <li><a href="#análise-exploratória-de-dados" id="toc-análise-exploratória-de-dados" class="nav-link" data-scroll-target="#análise-exploratória-de-dados">Análise Exploratória de Dados</a></li>
+  <li><a href="#modelo" id="toc-modelo" class="nav-link" data-scroll-target="#modelo">Modelo</a></li>
+  </ul></li>
+  <li><a href="#árvores-de-decisão" id="toc-árvores-de-decisão" class="nav-link" data-scroll-target="#árvores-de-decisão">Árvores de Decisão</a></li>
+  <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests">Random Forests</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tutorial 6 - Métodos de Classificação simplificados</h1>
+<p class="subtitle lead">Aprendizagem Supervisionada</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="carregando-os-pacotes" class="level2">
+<h2 class="anchored" data-anchor-id="carregando-os-pacotes">Carregando os pacotes</h2>
+<p>Vamos usar um dataset sobre churn.</p>
+<div class="cell">
+<div class="cell-output-display">
+<a href="data:application/zip;base64,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" download="data6.zip">Você pode baixar os dados aqui.</a>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fst)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="regressão-logística" class="level2">
+<h2 class="anchored" data-anchor-id="regressão-logística">Regressão Logística</h2>
+<section id="carregando-o-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="carregando-o-dataset">Carregando o dataset</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>churn <span class="ot">&lt;-</span> <span class="fu">read_fst</span>(<span class="st">"data6/churn.fst"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>churn<span class="sc">$</span>has_churned <span class="ot">&lt;-</span> <span class="fu">as_factor</span>(churn<span class="sc">$</span>has_churned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Vamos fazer uma análise da estrutura dos dados:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(churn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 400
+Columns: 3
+$ has_churned               &lt;fct&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ time_since_first_purchase &lt;dbl&gt; -1.08922097, 1.18298297, -0.84615637, 0.0869…
+$ time_since_last_purchase  &lt;dbl&gt; -0.72132150, 3.63443539, -0.42758226, -0.535…</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(churn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> has_churned time_since_first_purchase time_since_last_purchase
+ 0:200       Min.   :-1.27377          Min.   :-0.8707         
+ 1:200       1st Qu.:-0.82838          1st Qu.:-0.6458         
+             Median :-0.15207          Median :-0.2650         
+             Mean   :-0.03437          Mean   : 0.1445         
+             3rd Qu.: 0.54483          3rd Qu.: 0.5712         
+             Max.   : 3.73831          Max.   : 5.9282         </code></pre>
+</div>
+</div>
+<p>A regressão logística tem a propriedade de predizer valores entre o intervalo 0 e 1 (pense nesses valores como a probabilidades de churn de 0 a 100%).</p>
+</section>
+<section id="análise-exploratória-de-dados" class="level3">
+<h3 class="anchored" data-anchor-id="análise-exploratória-de-dados">Análise Exploratória de Dados</h3>
+<p>Uma breve EDA mostra a relação entre os tempos de primeira e última compras com o churn de clientes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>churn <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(time_since_first_purchase, <span class="at">fill=</span>has_churned,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">color=</span>has_churned))<span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"O tempo desde a primeira compra é maior para clientes perdidos"</span>)<span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Já para o tempo desde a última compra:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>churn <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(time_since_last_purchase, <span class="at">fill=</span>has_churned,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">color=</span>has_churned))<span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Clientes perdidos demoram mais tempo para voltar a comprar"</span>)<span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="modelo" class="level3">
+<h3 class="anchored" data-anchor-id="modelo">Modelo</h3>
+<p>O primeiro passo será separar os dados em treino e teste.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1212</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(churn, <span class="at">prop =</span> <span class="fl">0.7</span>, <span class="at">strata =</span> has_churned)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Para treinar um modelo de regressão logística, usamos a função <code>glm()</code> e o argumento <code>family = "binomial"</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>logmodel <span class="ot">&lt;-</span> <span class="fu">glm</span>(has_churned <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>logmodel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:  glm(formula = has_churned ~ ., family = "binomial", data = train)
+
+Coefficients:
+              (Intercept)  time_since_first_purchase  
+                  -0.1129                    -0.7370  
+ time_since_last_purchase  
+                   0.5950  
+
+Degrees of Freedom: 279 Total (i.e. Null);  277 Residual
+Null Deviance:      388.2 
+Residual Deviance: 358.6    AIC: 364.6</code></pre>
+</div>
+</div>
+<p>Para se ter uma noção sobre a curva de ajuste, a regressão logística segue o formato de uma curva em “S” onde as probabilidades (neste caso de churn) sempre estarão entre 0 e 1</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>curva <span class="ot">&lt;-</span> churn <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(time_since_last_purchase, has_churned))<span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">20</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>curva</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>adicionamos uma camada: <code>stat_smooth(method="glm", method.args=list(family="binomial"), fullrange = TRUE, se = FALSE)</code> ao ggplot:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>curva <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">stat_smooth</span>(<span class="at">method=</span><span class="st">"glm"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">method.args=</span><span class="fu">list</span>(<span class="at">family=</span><span class="st">"binomial"</span>), </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">fullrange =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Para predizer valores a partir de novos dados de <code>time_since_last_purchase</code> e <code>time_since_first_purchase</code> deve-se usar a função <code>predict()</code>. Podemos criar um novo dataframe denominado <code>churn_df_log</code> e incluir uma nova coluna com <code>predict()</code> dentro do <code>mutate()</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(logmodel,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                   test,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>churn_df_log <span class="ot">&lt;-</span> test <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pred_log =</span> pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Agora vamos plotar a curva ROC e calcular a área abaixo da curva ROC, conhecida como AUC.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotar a curva ROC com autoplot</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">roc_curve</span>(churn_df_log, has_churned, pred_log))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular AUC usando a função roc_auc</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">roc_auc</span>(churn_df_log, has_churned, pred_log)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.397</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="árvores-de-decisão" class="level2">
+<h2 class="anchored" data-anchor-id="árvores-de-decisão">Árvores de Decisão</h2>
+<p>Árvores de Decisão, ou Decision Trees, são algoritmos de machine learning largamente utilizados, com uma estrutura de simples compreensão e que costumam apresentar bons resultados em suas previsões.</p>
+<p>Eles também são a base do funcionamento de outros poderosos algoritmos, como o Random Forest, por exemplo.</p>
+<p>As decision trees estão entre os primeiros algoritmos aprendidos por iniciantes no mundo do aprendizado de máquina.</p>
+<p>Mais detalhes sobre como funciona em: <a href="https://app.datacamp.com/workspace/external-link?url=https%3A%2F%2Fdidatica.tech%2Fcomo-funciona-o-algoritmo-arvore-de-decisao%2F"><strong>didatica.tech</strong></a></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>tree_model <span class="ot">&lt;-</span> <span class="fu">rpart</span>(has_churned <span class="sc">~</span>.,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> train,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">method =</span> <span class="st">"class"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(tree_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Agora que a árvore de decisão foi criada, podemos verificar a sua precisão comparando as previsões com a coluna original.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pred_tree <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree_model,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                    test,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>churn_df_tree <span class="ot">&lt;-</span> test <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pred_tree =</span> pred_tree)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Antes de continuar, precisamos converter a coluna <code>has_churned</code> para <code>factor</code> e a coluna <code>pred_tree</code> para <code>numeric</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convertendo has_churned para factor</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>churn_df_tree<span class="sc">$</span>has_churned <span class="ot">&lt;-</span> <span class="fu">factor</span>(churn_df_tree<span class="sc">$</span>has_churned, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#convertendo pred_tree para numeric</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>churn_df_tree<span class="sc">$</span>pred_tree <span class="ot">&lt;-</span> <span class="fu">as.character</span>(churn_df_tree<span class="sc">$</span>pred_tree)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>churn_df_tree<span class="sc">$</span>pred_tree <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(churn_df_tree<span class="sc">$</span>pred_tree)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Agora sim, podemos plotar a curva ROC</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">roc_curve</span>(churn_df_tree, <span class="at">truth =</span> has_churned, pred_tree))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>E a AUC:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">roc_auc</span>(churn_df_tree, <span class="at">truth =</span> has_churned, pred_tree)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.442</code></pre>
+</div>
+</div>
+</section>
+<section id="random-forests" class="level2">
+<h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
+<p>Em português, Random Forest significa floresta aleatória. Este nome explica muito bem o funcionamento do algoritmo.</p>
+<p>Em resumo, o Random Forest irá criar muitas árvores de decisão, de maneira aleatória, formando o que podemos enxergar como uma floresta, onde cada árvore será utilizada na escolha do resultado final, em uma espécie de votação. Mais detalhes em: <a href="https://app.datacamp.com/workspace/external-link?url=https%3A%2F%2Fdidatica.tech%2Fo-que-e-e-como-funciona-o-algoritmo-randomforest%2F"><strong>didatica.tech</strong></a>.</p>
+<p>Vamos carregar o pacote <code>ranger</code> que serve para treinar Random Forests</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># treinar um modelo usando o pacote `ranger`</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">ranger</span>(has_churned <span class="sc">~</span> ., </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">data =</span> train,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">num.trees =</span> <span class="dv">500</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">classification =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Uma vez que o modelo foi treinado, vamos calcular o indicadores de acurácia utilizando os procedimentos já vistos. Porém, há um passo intermediário que serve para extrair as predições do objeto criado pelo <code>predict()</code> do <code>ranger</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rf_predict <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"response"</span>)<span class="sc">$</span>predictions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Agora sim, podemos utilizar o código dos modelos anteriores, adaptando-o ligeiramente para incluir o vetor criado acima com os valores preditos.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>churn_df_rf <span class="ot">&lt;-</span> test <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pred_rf =</span> rf_predict)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Como no caso anterior, a coluna <code>has_churned</code> precisa estar no formato <code>factor</code>, e a coluna <code>pred_rf</code> no formato <code>numeric</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#convertendo has_churned para factor</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>churn_df_rf<span class="sc">$</span>has_churned <span class="ot">&lt;-</span> <span class="fu">factor</span>(churn_df_rf<span class="sc">$</span>has_churned, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#convertendo pred_rf para numeric</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>churn_df_rf<span class="sc">$</span>pred_rf <span class="ot">&lt;-</span> <span class="fu">as.character</span>(churn_df_rf<span class="sc">$</span>pred_rf)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>churn_df_rf<span class="sc">$</span>pred_rf <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(churn_df_rf<span class="sc">$</span>pred_rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Agora sim, podemos plotar a curva ROC</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">roc_curve</span>(churn_df_rf, <span class="at">truth =</span> has_churned, pred_rf))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Tutorial5_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">roc_auc</span>(churn_df_rf, <span class="at">truth =</span> has_churned, pred_rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.417</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
